@@ -53,9 +53,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() async {
     var url = "$ServerUrl/questoes";
     var response = await _requestService.getListAsync<QuestaoModel>(url: url, objectFromJson: QuestaoModel.fromJson);
-    print(response.errors);
-    print(response.success);
-    response.data.forEach((questao) => print(questao));
+    if(response.success) {
+      response.data.forEach((questao) => print(questao));
+    } else {
+      response.errors.forEach((erro) => print(erro));
+    }
   }
 
   @override
