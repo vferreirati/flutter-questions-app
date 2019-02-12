@@ -30,15 +30,15 @@ class RequestService {
           return ResponseListModel.fromJson<T>(response.data, objectFromJson);
 
         } else {
-          return ResponseListModel(success: false, errors: ["Erro ao se comunicar com o servidor"]);
+          return ResponseListModel.requestError();
         }
       } catch(e) {
         print("Erro: ${e.toString()}");
-        return ResponseListModel(success: false, errors: ["Erro ao se comunicar com o servidor"]);
+        return ResponseListModel.requestError();
       }
 
     } else {
-      return ResponseListModel(success: false, errors: ["Sem conexão com a internet"]);
+      return ResponseListModel.noConnection();
     }
   }
 
@@ -53,16 +53,39 @@ class RequestService {
           return ResponseModel.fromJson<T>(response.data, objectFromJson);
 
         } else {
-          return ResponseModel(success: false, errors: ["Erro ao se comunicar com o servidor"]);
+          return ResponseModel.requestError();
         }
 
       } catch(e) {
         print("Erro: ${e.toString()}");
-        return ResponseModel(success: false, errors: ["Erro ao se comunicar com o servidor"]);
+        return ResponseModel.requestError();
       }
 
     } else {
-      return ResponseModel(success: false, errors: ["Sem conexão com a internet"]);
+      return ResponseModel.noConnection();
+    }
+  }
+
+  Future<ResponseModel> postAsync<T>({@required String url, @required Map<String, dynamic> json}) async {
+    var isConnected = await checkConnectivity();
+
+    if(isConnected) {
+      try {
+        var response = await _dio.post(url, data: json);
+        if(response != null) {
+          return ResponseModel.fromJson(response.data, null);
+
+        } else {
+          return ResponseModel.requestError();
+        }
+
+      } catch(e) {
+        print("Erro: ${e.toString()}");
+        return ResponseModel.requestError();
+      }
+
+    } else {
+      return ResponseModel.noConnection();
     }
   }
 }

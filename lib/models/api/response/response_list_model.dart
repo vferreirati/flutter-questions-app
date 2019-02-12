@@ -4,6 +4,14 @@ class ResponseListModel<T> {
   bool success;
 
   ResponseListModel({this.data, this.errors, this.success});
+  ResponseListModel.noConnection() {
+    success = false;
+    errors = ["Sem conexão com a internet"];
+  }
+  ResponseListModel.requestError() {
+    success = false;
+    errors = ["Erro ao se comunicar com o servidor"];
+  }
 
   static ResponseListModel<T> fromJson<T>(Map<String, dynamic> json, T Function(Map<String, dynamic>) objectFromJson) {
     var model = ResponseListModel<T>();
