@@ -1,3 +1,6 @@
+import 'package:exata_questoes_app/models/api/questao_model.dart';
+import 'package:exata_questoes_app/network/base/request_service.dart';
+import 'package:exata_questoes_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -45,16 +48,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  RequestService _requestService = RequestService();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _incrementCounter() async {
+    var url = "$ServerUrl/questoes";
+    var response = await _requestService.getListAsync<QuestaoModel>(url: url, objectFromJson: QuestaoModel.fromJson);
+    if(response.success) {
+      response.data.forEach((questao) => print(questao));
+    } else {
+      response.errors.forEach((erro) => print(erro));
+    }
   }
 
   @override
