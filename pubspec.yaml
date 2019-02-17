@@ -67,11 +67,12 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  assets:
+    - assets/images/avatar-placeholder.png
+    - assets/images/2x/avatar-placeholder.png
+    - assets/images/3x/avatar-placeholder.png
 
   fonts:
     - family: MavenPro
       fonts:
-        - asset: fonts/MavenPro-Regular.ttf
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.io/custom-fonts/#from-packages
+        - asset: assets/fonts/MavenPro-Regular.ttf
