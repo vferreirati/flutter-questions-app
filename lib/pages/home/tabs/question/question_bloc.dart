@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:exata_questoes_app/models/api/materia_model.dart';
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
-import 'package:exata_questoes_app/models/materia_model.dart';
 import 'package:exata_questoes_app/services/ano/ano_mock_service.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_mock_service.dart';
@@ -75,7 +75,7 @@ class QuestionBloc {
     _loadingMaterias.add(true);
 
     final result = await _materiaService.getMateriasAsync();
-    if(result.success) {
+    if (result.success) {
       _materias.add(result.data);
     } else {
       _materias.addError(result.errors);

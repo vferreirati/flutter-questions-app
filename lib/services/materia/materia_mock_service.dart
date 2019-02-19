@@ -1,9 +1,8 @@
+import 'package:exata_questoes_app/models/api/materia_model.dart';
 import 'package:exata_questoes_app/models/api/response/response_list_model.dart';
-import 'package:exata_questoes_app/models/materia_model.dart';
 import 'package:exata_questoes_app/services/materia/materia_service.dart';
 
 class MateriaMockService implements MateriaService {
-
   Future<ResponseListModel<MateriaModel>> getMateriasAsync() async {
     await Future.delayed(Duration(seconds: 3));
 

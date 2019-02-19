@@ -1,5 +1,5 @@
+import 'package:exata_questoes_app/models/api/materia_model.dart';
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
-import 'package:exata_questoes_app/models/materia_model.dart';
 import 'package:exata_questoes_app/pages/home/tabs/question/question_bloc.dart';
 import 'package:exata_questoes_app/widgets/gradient_button.dart';
 import 'package:exata_questoes_app/widgets/multi_select_dropdown.dart';
