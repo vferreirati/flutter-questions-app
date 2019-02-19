@@ -88,10 +88,7 @@ class QuestionsTab extends StatelessWidget {
             },
           );
         } else {
-          return MultiSelectDropDown.loading(
-            title: "Matérias",
-            subtitle: "Carregando...",
-          );
+          return MultiSelectDropDown.loading(title: "Matérias");
         }
       },
     );
@@ -121,10 +118,7 @@ class QuestionsTab extends StatelessWidget {
             },
           );
         }
-        return MultiSelectDropDown.loading(
-          title: "Anos",
-          subtitle: "Carregando...",
-        );
+        return MultiSelectDropDown.loading(title: "Anos");
       }
     );
   }
@@ -154,10 +148,7 @@ class QuestionsTab extends StatelessWidget {
             },
           );
         } else {
-          return SingleSelectDropDown.loading(
-            title: "Simulados",
-            subtitle: "Carregando...",
-          );
+          return SingleSelectDropDown.loading(title: "Simulados");
         }
       },
     );

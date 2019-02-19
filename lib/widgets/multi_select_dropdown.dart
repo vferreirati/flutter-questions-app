@@ -6,23 +6,23 @@ class MultiSelectDropDown extends StatefulWidget {
   final void Function(bool, String) onSelect;
   final String title;
   final String errorMessage;
-  final String subtitle;
+  final bool isLoading;
 
   MultiSelectDropDown(
       {@required this.itemsTitle,
       @required this.onSelect,
       @required this.title,
       this.errorMessage,
-      this.subtitle});
+      this.isLoading = false});
 
   factory MultiSelectDropDown.loading(
-      {@required String subtitle, @required String title}) {
+      {@required String title}) {
     return MultiSelectDropDown(
       onSelect: null,
       itemsTitle: null,
       title: title,
       errorMessage: null,
-      subtitle: subtitle,
+      isLoading: true,
     );
   }
 
@@ -33,7 +33,7 @@ class MultiSelectDropDown extends StatefulWidget {
       itemsTitle: null,
       title: title,
       errorMessage: error,
-      subtitle: null,
+      isLoading: false,
     );
   }
 
@@ -45,11 +45,10 @@ class _MultiSelectDropDownState extends State<MultiSelectDropDown> {
   List<String> get itemsTitle => widget.itemsTitle;
   Function get onSelect => widget.onSelect;
   String get title => widget.title;
+  bool get isLoading => widget.isLoading;
   String get errorMessage => widget.errorMessage;
-  String get subtitle => widget.subtitle;
   bool get isErrorMode => errorMessage != null;
-  bool get isLoadingMode => subtitle != null;
-  bool get isDataMode => (!isErrorMode && !isLoadingMode);
+  bool get isDataMode => (!isErrorMode && !isLoading);
 
   bool _isExpanded;
   var _checkMapState = Map<String, bool>();
@@ -87,7 +86,9 @@ class _MultiSelectDropDownState extends State<MultiSelectDropDown> {
       title: tileText(title: title),
       subtitle: _buildSubtitle(),
       onTap: _toggleIsExpanded,
-      trailing: Icon(Icons.keyboard_arrow_down),
+      trailing: isLoading
+          ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2,),)
+          : Icon(Icons.keyboard_arrow_down)
     );
   }
 
@@ -97,16 +98,13 @@ class _MultiSelectDropDownState extends State<MultiSelectDropDown> {
         errorMessage,
         style: TextStyle(color: Colors.red),
       );
-    } 
-    if (subtitle != null) {
-      return Text(subtitle);
     }
 
     return null;
   }
 
   void _toggleIsExpanded() {
-    if (!isErrorMode && !isLoadingMode) {
+    if (isDataMode) {
       setState(() {
         _isExpanded = !_isExpanded;
         if(_isExpanded && _checkMapState.isEmpty) {

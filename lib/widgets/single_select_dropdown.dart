@@ -6,23 +6,23 @@ class SingleSelectDropDown extends StatefulWidget {
   final List<String> itemsTitle;
   final String title;
   final String errorMessage;
-  final String subtitle;
+  final bool isLoading;
 
   SingleSelectDropDown(
       {@required this.onSelect,
       @required this.itemsTitle,
       @required this.title,
       this.errorMessage,
-      this.subtitle});
+      this.isLoading = false});
 
   factory SingleSelectDropDown.loading(
-      {@required String subtitle, @required String title}) {
+      {@required String title}) {
     return SingleSelectDropDown(
       onSelect: null,
       itemsTitle: null,
       title: title,
       errorMessage: null,
-      subtitle: subtitle,
+      isLoading: true,
     );
   }
 
@@ -33,7 +33,7 @@ class SingleSelectDropDown extends StatefulWidget {
       itemsTitle: null,
       title: title,
       errorMessage: error,
-      subtitle: null,
+      isLoading: false,
     );
   }
 
@@ -46,9 +46,9 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
   Function get onSelect => widget.onSelect;
   String get title => widget.title;
   String get errorMessage => widget.errorMessage;
-  String get subtitle => widget.subtitle;
+  bool get isLoading => widget.isLoading;
   bool get isErrorMode => errorMessage != null;
-  bool get isLoadingMode => subtitle != null;
+
 
   bool isExpanded;
 
@@ -68,7 +68,9 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
       title: tileText(title: title),
       subtitle: _buildSubtitle(),
       onTap: _toggleIsExpanded,
-      trailing: Icon(Icons.keyboard_arrow_down),
+      trailing: isLoading
+          ? SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2,),)
+          : Icon(Icons.keyboard_arrow_down)
     );
   }
 
@@ -78,9 +80,6 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
         errorMessage,
         style: TextStyle(color: Colors.red),
       );
-    } 
-    if (subtitle != null) {
-      return Text(subtitle);
     }
 
     return null;
@@ -104,7 +103,7 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
   }
 
   void _toggleIsExpanded() {
-    if (!isErrorMode && !isLoadingMode) {
+    if (!isErrorMode && !isLoading) {
       setState(() {
         isExpanded = !isExpanded;
       });
