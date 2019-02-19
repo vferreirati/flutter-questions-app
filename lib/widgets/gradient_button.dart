@@ -7,7 +7,8 @@ class GradientButton extends StatefulWidget {
   final String title;
   final bool isLoading;
 
-  GradientButton({@required this.onClick, @required this.title, @required this.isLoading});
+  GradientButton(
+      {@required this.onClick, @required this.title, @required this.isLoading});
 
   @override
   _GradientButtonState createState() => _GradientButtonState();
@@ -20,31 +21,33 @@ class _GradientButtonState extends State<GradientButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onClick,
-      child: Container(
-        height: 60,
-        alignment: AlignmentDirectional.center,
-        decoration: BoxDecoration(
-          gradient: buttonGradient(),
-          borderRadius: BorderRadius.circular(5)
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            tileText(title: "Iniciar", color: Colors.white, size: 20),
-            SizedBox(width: 8),
-            isLoading
-              ? SizedBox(
-                  height: 15,
-                  width: 15,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    strokeWidth: 2,
-                  ),
-                )
-              : Container()
-          ],
+    return Container(
+      height: 60,
+      alignment: AlignmentDirectional.center,
+      decoration: BoxDecoration(
+          gradient: buttonGradient(), borderRadius: BorderRadius.circular(5)),
+      child: Material(
+        elevation: 2,
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onClick,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              tileText(title: "Iniciar", color: Colors.white, size: 20),
+              SizedBox(width: 8),
+              isLoading
+                  ? SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Container()
+            ],
+          ),
         ),
       ),
     );
