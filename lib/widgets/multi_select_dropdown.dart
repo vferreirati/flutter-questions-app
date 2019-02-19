@@ -97,7 +97,8 @@ class _MultiSelectDropDownState extends State<MultiSelectDropDown> {
         errorMessage,
         style: TextStyle(color: Colors.red),
       );
-    } else if (subtitle != null) {
+    } 
+    if (subtitle != null) {
       return Text(subtitle);
     }
 

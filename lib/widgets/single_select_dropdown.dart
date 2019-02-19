@@ -78,7 +78,8 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
         errorMessage,
         style: TextStyle(color: Colors.red),
       );
-    } else if (subtitle != null) {
+    } 
+    if (subtitle != null) {
       return Text(subtitle);
     }
 
