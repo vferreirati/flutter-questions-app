@@ -1,9 +1,15 @@
+import 'package:exata_questoes_app/models/api/simulado_model.dart';
+import 'package:exata_questoes_app/pages/home/tabs/question/question_bloc.dart';
 import 'package:exata_questoes_app/widgets/gradient_button.dart';
 import 'package:exata_questoes_app/widgets/multi_select_dropdown.dart';
 import 'package:exata_questoes_app/widgets/single_select_dropdown.dart';
 import 'package:flutter/material.dart';
 
 class QuestionsTab extends StatelessWidget {
+  final QuestionBloc bloc;
+
+  QuestionsTab({this.bloc});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -40,22 +46,20 @@ class QuestionsTab extends StatelessWidget {
           padding: EdgeInsets.only(top: 5, left: 10, right: 10),
           child: Column(
             children: <Widget>[
-              SingleSelectDropDown(
-                title: "Simulados",
-                itemsTitle: ["Enem 1", "Enem 2", "Enem 3", "Enem 4"],
-                onSelect: (title) => print("O simulado escolhido foi $title"),
-              ),
+              _simuladoFilter(),
               Divider(),
               MultiSelectDropDown(
                 title: "Matérias",
                 itemsTitle: ["Português", "Matemática", "Física", "Química"],
-                onSelect: (isChecked, title) => print("$title será buscado? $isChecked"),
+                onSelect: (isChecked, title) =>
+                    print("$title será buscado? $isChecked"),
               ),
               Divider(),
               MultiSelectDropDown(
                 title: "Anos",
                 itemsTitle: ["2018", "2017", "2016", "2015"],
-                onSelect: (isChecked, title) => print("$title será buscado? $isChecked"),
+                onSelect: (isChecked, title) =>
+                    print("$title será buscado? $isChecked"),
               )
             ],
           ),
@@ -64,11 +68,47 @@ class QuestionsTab extends StatelessWidget {
     );
   }
 
+  StreamBuilder<bool> _simuladoFilter() {
+    return StreamBuilder<bool>(
+      initialData: true,
+      stream: bloc.loadingSimulados,
+      builder: (context, snapshot) {
+        if (!snapshot.data) {
+          return StreamBuilder<List<SimuladoModel>>(
+            stream: bloc.simulados,
+            initialData: [],
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return SingleSelectDropDown.error(
+                  title: "Simulados",
+                  error: "Erro ao carregar simulados",
+                );
+              }
+              return SingleSelectDropDown(
+                title: "Simulados",
+                itemsTitle:
+                    snapshot.data.map((simulado) => simulado.nome).toList(),
+                onSelect: (title) => print("O simulado escolhido foi $title"),
+              );
+            },
+          );
+        } else {
+          return SingleSelectDropDown.loading(
+            title: "Simulados",
+            subtitle: "Carregando...",
+          );
+        }
+      },
+    );
+  }
+
   Widget _submitButton() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: GradientButton(onClick: () => print("Clicked to start"), title: "Iniciar", isLoading: false)
-    );
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: GradientButton(
+            onClick: () => print("Clicked to start"),
+            title: "Iniciar",
+            isLoading: false));
   }
 
   void _showUserProfile() {

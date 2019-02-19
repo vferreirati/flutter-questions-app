@@ -21,6 +21,6 @@ class SimuladoMockService implements SimuladoService {
       SimuladoModel(id: 3, nome: "Enem 2016"),
     ];
 
-    return ResponseListModel.success(data);
+    return ResponseListModel.requestError();
   }
 }

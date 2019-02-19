@@ -5,11 +5,37 @@ class SingleSelectDropDown extends StatefulWidget {
   final void Function(String) onSelect;
   final List<String> itemsTitle;
   final String title;
+  final String errorMessage;
+  final String subtitle;
 
   SingleSelectDropDown(
       {@required this.onSelect,
       @required this.itemsTitle,
-      @required this.title});
+      @required this.title,
+      this.errorMessage,
+      this.subtitle});
+
+  factory SingleSelectDropDown.loading(
+      {@required String subtitle, @required String title}) {
+    return SingleSelectDropDown(
+      onSelect: null,
+      itemsTitle: null,
+      title: title,
+      errorMessage: null,
+      subtitle: subtitle,
+    );
+  }
+
+  factory SingleSelectDropDown.error(
+      {@required String title, @required String error}) {
+    return SingleSelectDropDown(
+      onSelect: null,
+      itemsTitle: null,
+      title: title,
+      errorMessage: error,
+      subtitle: null,
+    );
+  }
 
   @override
   _SingleSelectDropDownState createState() => _SingleSelectDropDownState();
@@ -19,6 +45,10 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
   List<String> get itemsTitle => widget.itemsTitle;
   Function get onSelect => widget.onSelect;
   String get title => widget.title;
+  String get errorMessage => widget.errorMessage;
+  String get subtitle => widget.subtitle;
+  bool get isErrorMode => errorMessage != null;
+  bool get isLoadingMode => subtitle != null;
 
   bool isExpanded;
 
@@ -36,9 +66,23 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
   Widget _collapsedDropDown() {
     return ListTile(
       title: tileText(title: title),
+      subtitle: _buildSubtitle(),
       onTap: _toggleIsExpanded,
       trailing: Icon(Icons.keyboard_arrow_down),
     );
+  }
+
+  Widget _buildSubtitle() {
+    if (errorMessage != null) {
+      return Text(
+        errorMessage,
+        style: TextStyle(color: Colors.red),
+      );
+    } else if (subtitle != null) {
+      return Text(subtitle);
+    }
+
+    return null;
   }
 
   Widget _expandedDropDown() {
@@ -58,5 +102,11 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
     );
   }
 
-  void _toggleIsExpanded() => setState(() => this.isExpanded = !this.isExpanded);
+  void _toggleIsExpanded() {
+    if (!isErrorMode && !isLoadingMode) {
+      setState(() {
+        isExpanded = !isExpanded;
+      });
+    }
+  }
 }

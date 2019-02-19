@@ -23,6 +23,7 @@ dependencies:
   sqflite: ^1.1.0
   connectivity: ^0.4.0+2
   dio: ^2.0.0
+  rxdart: ^0.20.0
 
 dev_dependencies:
   flutter_test:

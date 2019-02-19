@@ -1,5 +1,6 @@
 import 'package:exata_questoes_app/pages/home/tabs/notifications_tab.dart';
-import 'package:exata_questoes_app/pages/home/tabs/questions_tab.dart';
+import 'package:exata_questoes_app/pages/home/tabs/question/question_bloc.dart';
+import 'package:exata_questoes_app/pages/home/tabs/question/questions_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,11 +12,19 @@ class _HomePageState extends State<HomePage> {
   static const int _QUESTIONS = 0;
   static const int _NOTIFICATIONS = 1;
 
+  QuestionBloc _questionBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _questionBloc = QuestionBloc();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: tab == _QUESTIONS
-          ? QuestionsTab()
+          ? QuestionsTab(bloc: _questionBloc)
           : NotificationsTab(), // TODO:  Animate the transition between tabs
       bottomNavigationBar: _buildBottomNavigation(),
     );
@@ -46,5 +55,10 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       tab = value;
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
