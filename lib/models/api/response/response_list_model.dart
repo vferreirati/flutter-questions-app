@@ -12,10 +12,10 @@ class ResponseListModel<T> {
     success = false;
     errors = ["Erro ao se comunicar com o servidor"];
   }
-  ResponseListModel.success(List<T> data) {
+  ResponseListModel.success(List<T> items) {
     success = true;
     errors = [];
-    data = data;
+    data = items;
   }
 
   static ResponseListModel<T> fromJson<T>(Map<String, dynamic> json,
