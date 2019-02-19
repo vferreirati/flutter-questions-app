@@ -23,9 +23,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: tab == _QUESTIONS
-          ? QuestionsTab(bloc: _questionBloc)
-          : NotificationsTab(), // TODO:  Animate the transition between tabs
+      body: IndexedStack(
+        index: tab,
+        children: <Widget>[
+          QuestionsTab(bloc: _questionBloc),
+          NotificationsTab()
+        ],
+      ),
       bottomNavigationBar: _buildBottomNavigation(),
     );
   }
@@ -50,8 +54,6 @@ class _HomePageState extends State<HomePage> {
 
   void _onBottomNavigationSelect(int value) {
     if (value == tab) return;
-
-    print(value);
     setState(() {
       tab = value;
     });
@@ -59,6 +61,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _questionBloc.dispose();
     super.dispose();
   }
 }

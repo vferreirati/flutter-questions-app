@@ -5,18 +5,15 @@ import 'package:exata_questoes_app/services/ano/ano_mock_service.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_mock_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_service.dart';
-import 'package:rxdart/rxdart.dart';
 
 class QuestionBloc {
   SimuladoService _simuladoService;
   AnoService _anoService;
-
-  // Essa stream deveria ser broadcast.
-  // Entretanto uma broadcast stream não estão propagando eventos de erro.
-  final _simulados = StreamController<List<SimuladoModel>>();
-  final _anos = BehaviorSubject<List<String>>();
-  final _loadingSimulados = BehaviorSubject<bool>();
-  final _loadingAnos = BehaviorSubject<bool>();
+  
+  final _simulados = StreamController<List<SimuladoModel>>(sync: false);
+  final _anos = StreamController<List<String>>();
+  final _loadingSimulados = StreamController<bool>();
+  final _loadingAnos = StreamController<bool>();
 
   Stream<List<String>> get anos => _anos.stream;
   Stream<List<SimuladoModel>> get simulados => _simulados.stream;
