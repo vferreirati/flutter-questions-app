@@ -1,26 +1,28 @@
 import 'package:exata_questoes_app/widgets/text.dart';
 import 'package:flutter/material.dart';
 
-class SingleSelectDropDown extends StatefulWidget {
-  final void Function(String) onSelect;
-  final List<String> itemsTitle;
+class SingleSelectDropDown<T> extends StatefulWidget {
+  final void Function(T) onSelect;
+  final String Function(T) nameBuilder;
+  final List<T> items;
   final String title;
   final String errorMessage;
   final bool isLoading;
 
   SingleSelectDropDown(
       {@required this.onSelect,
-      @required this.itemsTitle,
+      @required this.items,
       @required this.title,
+      @required this.nameBuilder,
       this.errorMessage,
       this.isLoading = false});
 
-  factory SingleSelectDropDown.loading(
-      {@required String title}) {
+  factory SingleSelectDropDown.loading({@required String title}) {
     return SingleSelectDropDown(
       onSelect: null,
-      itemsTitle: null,
+      items: null,
       title: title,
+      nameBuilder: null,
       errorMessage: null,
       isLoading: true,
     );
@@ -30,7 +32,8 @@ class SingleSelectDropDown extends StatefulWidget {
       {@required String title, @required String error}) {
     return SingleSelectDropDown(
       onSelect: null,
-      itemsTitle: null,
+      items: null,
+      nameBuilder: null,
       title: title,
       errorMessage: error,
       isLoading: false,
@@ -38,17 +41,17 @@ class SingleSelectDropDown extends StatefulWidget {
   }
 
   @override
-  _SingleSelectDropDownState createState() => _SingleSelectDropDownState();
+  _SingleSelectDropDownState createState() => _SingleSelectDropDownState<T>();
 }
 
-class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
-  List<String> get itemsTitle => widget.itemsTitle;
-  Function get onSelect => widget.onSelect;
+class _SingleSelectDropDownState<T> extends State<SingleSelectDropDown> {
+  String Function(T) get nameBuilder => widget.nameBuilder;
+  void Function(T) get onSelect => widget.onSelect;
+  List<T> get items => widget.items;
   String get title => widget.title;
   String get errorMessage => widget.errorMessage;
   bool get isLoading => widget.isLoading;
   bool get isErrorMode => errorMessage != null;
-
 
   bool isExpanded;
 
@@ -65,13 +68,18 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
 
   Widget _collapsedDropDown() {
     return ListTile(
-      title: tileText(title: title),
-      subtitle: _buildSubtitle(),
-      onTap: _toggleIsExpanded,
-      trailing: isLoading
-          ? SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2,),)
-          : Icon(Icons.keyboard_arrow_down)
-    );
+        title: tileText(title: title),
+        subtitle: _buildSubtitle(),
+        onTap: _toggleIsExpanded,
+        trailing: isLoading
+            ? SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              )
+            : Icon(Icons.keyboard_arrow_down));
   }
 
   Widget _buildSubtitle() {
@@ -88,10 +96,11 @@ class _SingleSelectDropDownState extends State<SingleSelectDropDown> {
   Widget _expandedDropDown() {
     var widgets = List<Widget>.from([_collapsedDropDown()]);
 
-    itemsTitle.forEach((title) {
+    items.forEach((item) {
+      var title = nameBuilder(item);
       var newTile = ListTile(
         title: tileSubItemText(title: title),
-        onTap: () => onSelect(title),
+        onTap: () => onSelect(item),
       );
 
       widgets.add(newTile);

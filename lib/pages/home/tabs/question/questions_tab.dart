@@ -68,12 +68,12 @@ class QuestionsTab extends StatelessWidget {
       stream: bloc.loadingMaterias,
       initialData: true,
       builder: (context, snapshot) {
-        if(!snapshot.data) {
+        if (!snapshot.data) {
           return StreamBuilder<List<MateriaModel>>(
             stream: bloc.materias,
             initialData: [],
             builder: (context, snapshot) {
-              if(snapshot.hasError) {
+              if (snapshot.hasError) {
                 return MultiSelectDropDown.error(
                   title: "Matérias",
                   error: "Erro ao buscar matérias",
@@ -81,9 +81,10 @@ class QuestionsTab extends StatelessWidget {
               }
               return MultiSelectDropDown(
                 title: "Matérias",
-                itemsTitle: snapshot.data.map((materia) => materia.nome).toList(),
-                onSelect: (isChecked, title) =>
-                    print("$title será buscado? $isChecked"),
+                items: snapshot.data,
+                nameBuilder: (materia) => materia.nome,
+                onSelect: (isChecked, materia) =>
+                    print("${materia.nome} será buscado? $isChecked"),
               );
             },
           );
@@ -96,31 +97,31 @@ class QuestionsTab extends StatelessWidget {
 
   Widget _anoFilter() {
     return StreamBuilder<bool>(
-      stream: bloc.loadingAnos,
-      initialData: true,
-      builder: (context, snapshot) {
-        if(!snapshot.data) {
-          return StreamBuilder<List<String>>(
-            stream: bloc.anos,
-            initialData: null,
-            builder: (context, snapshot) {
-              if(snapshot.hasError) {
-                return MultiSelectDropDown.error(
-                  error: "Erro ao carregar anos",
-                  title: "Anos",
-                );
-              }
-              return MultiSelectDropDown(
-                itemsTitle: snapshot.data,
-                onSelect: (isChecked, title) => print("$title será buscado? $isChecked"),
-                title: "Anos"
-              );           
-            },
-          );
-        }
-        return MultiSelectDropDown.loading(title: "Anos");
-      }
-    );
+        stream: bloc.loadingAnos,
+        initialData: true,
+        builder: (context, snapshot) {
+          if (!snapshot.data) {
+            return StreamBuilder<List<String>>(
+              stream: bloc.anos,
+              initialData: null,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return MultiSelectDropDown.error(
+                    error: "Erro ao carregar anos",
+                    title: "Anos",
+                  );
+                }
+                return MultiSelectDropDown(
+                    items: snapshot.data,
+                    nameBuilder: (ano) => ano,
+                    onSelect: (isChecked, ano) =>
+                        print("$ano será buscado? $isChecked"),
+                    title: "Anos");
+              },
+            );
+          }
+          return MultiSelectDropDown.loading(title: "Anos");
+        });
   }
 
   Widget _simuladoFilter() {
@@ -141,9 +142,10 @@ class QuestionsTab extends StatelessWidget {
               }
               return SingleSelectDropDown(
                 title: "Simulados",
-                itemsTitle:
-                    snapshot.data.map((simulado) => simulado.nome).toList(),
-                onSelect: (title) => print("O simulado escolhido foi $title"),
+                items: snapshot.data,
+                nameBuilder: (simulado) => simulado.nome,
+                onSelect: (simulado) => print(
+                    "O simulado escolhido foi ${simulado.nome}:${simulado.id}"),
               );
             },
           );
