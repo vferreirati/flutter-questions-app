@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
 import 'package:exata_questoes_app/services/ano/ano_mock_service.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
@@ -9,7 +11,9 @@ class QuestionBloc {
   SimuladoService _simuladoService;
   AnoService _anoService;
 
-  final _simulados = BehaviorSubject<List<SimuladoModel>>();
+  // Essa stream deveria ser broadcast.
+  // Entretanto uma broadcast stream não estão propagando eventos de erro.
+  final _simulados = StreamController<List<SimuladoModel>>();
   final _anos = BehaviorSubject<List<String>>();
   final _loadingSimulados = BehaviorSubject<bool>();
   final _loadingAnos = BehaviorSubject<bool>();
@@ -34,8 +38,7 @@ class QuestionBloc {
     if (result.success) {
       _simulados.add(result.data);
     } else {
-      print(result.errors);
-      _simulados.addError("error");
+      _simulados.addError(result.errors);
     }
 
     _loadingSimulados.add(false);
