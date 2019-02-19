@@ -1,4 +1,5 @@
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
+import 'package:exata_questoes_app/models/materia_model.dart';
 import 'package:exata_questoes_app/pages/home/tabs/question/question_bloc.dart';
 import 'package:exata_questoes_app/widgets/gradient_button.dart';
 import 'package:exata_questoes_app/widgets/multi_select_dropdown.dart';
@@ -48,18 +49,47 @@ class QuestionsTab extends StatelessWidget {
             children: <Widget>[
               _simuladoFilter(),
               Divider(),
-              // MultiSelectDropDown(
-              //   title: "Matérias",
-              //   itemsTitle: ["Português", "Matemática", "Física", "Química"],
-              //   onSelect: (isChecked, title) =>
-              //       print("$title será buscado? $isChecked"),
-              // ),
-              // Divider(),
+              _materiaFilter(),
+              Divider(),
               _anoFilter()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _materiaFilter() {
+    return StreamBuilder<bool>(
+      stream: bloc.loadingMaterias,
+      initialData: true,
+      builder: (context, snapshot) {
+        if(!snapshot.data) {
+          return StreamBuilder<List<MateriaModel>>(
+            stream: bloc.materias,
+            initialData: [],
+            builder: (context, snapshot) {
+              if(snapshot.hasError) {
+                return MultiSelectDropDown.error(
+                  title: "Matérias",
+                  error: "Erro ao buscar matérias",
+                );
+              }
+              return MultiSelectDropDown(
+                title: "Matérias",
+                itemsTitle: snapshot.data.map((materia) => materia.nome).toList(),
+                onSelect: (isChecked, title) =>
+                    print("$title será buscado? $isChecked"),
+              );
+            },
+          );
+        } else {
+          return MultiSelectDropDown.loading(
+            title: "Matérias",
+            subtitle: "Carregando...",
+          );
+        }
+      },
     );
   }
 
