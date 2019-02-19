@@ -9,7 +9,7 @@ import 'package:exata_questoes_app/services/simulado/simulado_service.dart';
 class QuestionBloc {
   SimuladoService _simuladoService;
   AnoService _anoService;
-  
+
   final _simulados = StreamController<List<SimuladoModel>>(sync: false);
   final _anos = StreamController<List<String>>();
   final _loadingSimulados = StreamController<bool>();

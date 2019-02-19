@@ -48,19 +48,14 @@ class QuestionsTab extends StatelessWidget {
             children: <Widget>[
               _simuladoFilter(),
               Divider(),
-              MultiSelectDropDown(
-                title: "Matérias",
-                itemsTitle: ["Português", "Matemática", "Física", "Química"],
-                onSelect: (isChecked, title) =>
-                    print("$title será buscado? $isChecked"),
-              ),
-              Divider(),
-              MultiSelectDropDown(
-                title: "Anos",
-                itemsTitle: ["2018", "2017", "2016", "2015"],
-                onSelect: (isChecked, title) =>
-                    print("$title será buscado? $isChecked"),
-              )
+              // MultiSelectDropDown(
+              //   title: "Matérias",
+              //   itemsTitle: ["Português", "Matemática", "Física", "Química"],
+              //   onSelect: (isChecked, title) =>
+              //       print("$title será buscado? $isChecked"),
+              // ),
+              // Divider(),
+              _anoFilter()
             ],
           ),
         ),
@@ -68,7 +63,39 @@ class QuestionsTab extends StatelessWidget {
     );
   }
 
-  StreamBuilder<bool> _simuladoFilter() {
+  Widget _anoFilter() {
+    return StreamBuilder<bool>(
+      stream: bloc.loadingAnos,
+      initialData: true,
+      builder: (context, snapshot) {
+        if(!snapshot.data) {
+          return StreamBuilder<List<String>>(
+            stream: bloc.anos,
+            initialData: null,
+            builder: (context, snapshot) {
+              if(snapshot.hasError) {
+                return MultiSelectDropDown.error(
+                  error: "Erro ao carregar anos",
+                  title: "Anos",
+                );
+              }
+              return MultiSelectDropDown(
+                itemsTitle: snapshot.data,
+                onSelect: (isChecked, title) => print("$title será buscado? $isChecked"),
+                title: "Anos"
+              );           
+            },
+          );
+        }
+        return MultiSelectDropDown.loading(
+          title: "Anos",
+          subtitle: "Carregando...",
+        );
+      }
+    );
+  }
+
+  Widget _simuladoFilter() {
     return StreamBuilder<bool>(
       initialData: true,
       stream: bloc.loadingSimulados,
