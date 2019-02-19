@@ -13,16 +13,20 @@ class QuestionsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(top: 20),
-        child: Column(
-          children: <Widget>[
-            _userAvatarBadge(),
-            _questionFilters(),
-            SizedBox(height: 15),
-            _submitButton()
-          ],
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: Container(
+          padding: EdgeInsets.only(top: 20),
+          child: Column(
+            children: <Widget>[
+              _userAvatarBadge(),
+              _questionFilters(),
+              SizedBox(height: 15),
+              _submitButton()
+            ],
+          ),
         ),
       ),
     );
@@ -170,5 +174,9 @@ class QuestionsTab extends StatelessWidget {
 
   void _showUserProfile() {
     print("Pressed to show user profile!");
+  }
+
+  Future _onRefresh() async {
+    return bloc.onRefresh();
   }
 }

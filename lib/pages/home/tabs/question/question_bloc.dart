@@ -8,18 +8,19 @@ import 'package:exata_questoes_app/services/materia/materia_mock_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_mock_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 class QuestionBloc {
   SimuladoService _simuladoService;
   AnoService _anoService;
   MateriaService _materiaService;
 
-  final _simulados = StreamController<List<SimuladoModel>>();
-  final _anos = StreamController<List<String>>();
-  final _materias = StreamController<List<MateriaModel>>();
-  final _loadingSimulados = StreamController<bool>();
-  final _loadingAnos = StreamController<bool>();
-  final _loadingMaterias = StreamController<bool>();
+  final _simulados = BehaviorSubject<List<SimuladoModel>>();
+  final _anos = BehaviorSubject<List<String>>();
+  final _materias = BehaviorSubject<List<MateriaModel>>();
+  final _loadingSimulados = BehaviorSubject<bool>();
+  final _loadingAnos = BehaviorSubject<bool>();
+  final _loadingMaterias = BehaviorSubject<bool>();
 
   Stream<List<String>> get anos => _anos.stream;
   Stream<List<SimuladoModel>> get simulados => _simulados.stream;
@@ -33,9 +34,15 @@ class QuestionBloc {
     _anoService = AnoMockService();
     _materiaService = MateriaMockService();
 
+    onRefresh();
+  }
+
+  Future<Null> onRefresh() async {
     _loadSimulados();
     _loadAnos();
     _loadMaterias();
+
+    return null;
   }
 
   void _loadSimulados() async {
