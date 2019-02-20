@@ -71,13 +71,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   Widget _expandedDropDown() {
     var widgets = List<Widget>.from([_collapsedDropDown()]);
     items.forEach((item) {
-      var title = onBuildName(item);
-      var newTile = CheckboxListTile(
-        value: _checkMapState[title],
-        title: tileSubItemText(title: title),
-        onChanged: (value) => _onChecked(value, item),
-      );
-
+      var newTile = _buildChild(item: item);
       widgets.add(newTile);
     });
 
@@ -87,10 +81,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   Widget _collapsedDropDown() {
-    return ListTile(
-        title: tileText(title: title),
-        subtitle: _buildSubtitle(),
-        onTap: _toggleIsExpanded,
+    return _buildTitle(
         trailing: isLoading
             ? SizedBox(
                 width: 24,
@@ -99,7 +90,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                   strokeWidth: 2,
                 ),
               )
-            : Icon(Icons.keyboard_arrow_down));
+            : Icon(Icons.keyboard_arrow_down, color: Colors.grey,));
   }
 
   Widget _buildSubtitle() {
@@ -110,7 +101,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       );
     }
 
-    return null;
+    return Container();
   }
 
   void _toggleIsExpanded() {
@@ -127,5 +118,62 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   void _onChecked(bool newValue, T item) {
     onSelect(newValue, item);
     setState(() => _checkMapState[onBuildName(item)] = newValue);
+  }
+
+  Widget _buildTitle({Widget trailing}) {
+    return Container(
+      padding: EdgeInsets.all(15),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _toggleIsExpanded,
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  tileText(title: title),
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: trailing,
+                    )                   
+                  )
+                ],
+              ),
+              _buildSubtitle()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChild({T item}) {
+    var titleString = onBuildName(item);
+    var titleWidget = tileSubItemText(title: titleString);
+    
+    return Container(
+      padding: EdgeInsets.only(left: 15),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _onChecked(!_checkMapState[titleString], item),
+          child: Row(
+            children: <Widget>[
+              titleWidget,
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional.bottomEnd,
+                  child: Checkbox(
+                    value: _checkMapState[titleString],
+                    onChanged: (newValue) => _onChecked(newValue, item),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

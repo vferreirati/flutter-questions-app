@@ -61,19 +61,47 @@ class _SingleSelectDropDownState<T> extends State<SingleSelectDropDown<T>> {
   }
 
   Widget _collapsedDropDown() {
-    return ListTile(
-        title: tileText(title: title),
-        subtitle: _buildSubtitle(),
-        onTap: _toggleIsExpanded,
-        trailing: isLoading
-            ? SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              )
-            : Icon(Icons.keyboard_arrow_down));
+    return _buildTitle(trailing: isLoading
+      ? SizedBox(
+          height: 24,
+          width: 24,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        )
+      : GestureDetector(
+       child: Icon(Icons.keyboard_arrow_down, color: Colors.grey), 
+       onTap: _toggleIsExpanded,
+      )
+    );
+  }
+
+  Widget _buildTitle({Widget trailing}) {
+    return Container(
+      padding: EdgeInsets.all(15),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _toggleIsExpanded,
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  tileText(title: title),
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: trailing,
+                    )                   
+                  )
+                ],
+              ),
+              _buildSubtitle()
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildSubtitle() {
@@ -84,7 +112,7 @@ class _SingleSelectDropDownState<T> extends State<SingleSelectDropDown<T>> {
       );
     }
 
-    return null;
+    return Container();
   }
 
   Widget _expandedDropDown() {
