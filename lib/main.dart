@@ -1,4 +1,5 @@
 import 'package:exata_questoes_app/pages/home/home_page.dart';
+import 'package:exata_questoes_app/pages/home/home_bloc.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(ExataApp());
@@ -12,7 +13,7 @@ class ExataApp extends StatelessWidget {
         primaryColor: Colors.blue[800],
         accentColor: Colors.pink,
       ),
-      home: HomePage(),
+      home: HomePage(homeBloc: HomeBloc()),
     );
   }
 }

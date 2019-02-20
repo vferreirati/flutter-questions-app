@@ -11,7 +11,7 @@ import 'package:exata_questoes_app/services/simulado/simulado_mock_service.dart'
 import 'package:exata_questoes_app/services/simulado/simulado_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-class QuestionBloc {
+class HomeBloc {
   SimuladoService _simuladoService;
   AnoService _anoService;
   MateriaService _materiaService;
@@ -33,7 +33,7 @@ class QuestionBloc {
   Stream<bool> get loadingMaterias => _loadingMaterias.stream;
   Stream<bool> get loadingQuestoes => _loadingQuestoes.stream;
 
-  QuestionBloc() {
+  HomeBloc() {
     _simuladoService = SimuladoMockService();
     _anoService = AnoMockService();
     _materiaService = MateriaMockService();

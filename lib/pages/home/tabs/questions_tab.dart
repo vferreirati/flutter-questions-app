@@ -1,13 +1,13 @@
 import 'package:exata_questoes_app/models/api/materia_model.dart';
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
-import 'package:exata_questoes_app/pages/home/tabs/question/question_bloc.dart';
+import 'package:exata_questoes_app/pages/home/home_bloc.dart';
 import 'package:exata_questoes_app/widgets/gradient_button.dart';
 import 'package:exata_questoes_app/widgets/multi_select_dropdown.dart';
 import 'package:exata_questoes_app/widgets/single_select_dropdown.dart';
 import 'package:flutter/material.dart';
 
 class QuestionsTab extends StatelessWidget {
-  final QuestionBloc bloc;
+  final HomeBloc bloc;
 
   QuestionsTab({this.bloc});
 

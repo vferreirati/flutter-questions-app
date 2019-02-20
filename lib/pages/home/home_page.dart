@@ -1,9 +1,13 @@
 import 'package:exata_questoes_app/pages/home/tabs/notifications_tab.dart';
-import 'package:exata_questoes_app/pages/home/tabs/question/question_bloc.dart';
-import 'package:exata_questoes_app/pages/home/tabs/question/questions_tab.dart';
+import 'package:exata_questoes_app/pages/home/home_bloc.dart';
+import 'package:exata_questoes_app/pages/home/tabs/questions_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  final HomeBloc homeBloc;
+
+  HomePage({@required this.homeBloc});
+  
   _HomePageState createState() => _HomePageState();
 }
 
@@ -12,13 +16,7 @@ class _HomePageState extends State<HomePage> {
   static const int _QUESTIONS = 0;
   static const int _NOTIFICATIONS = 1;
 
-  QuestionBloc _questionBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _questionBloc = QuestionBloc();
-  }
+  HomeBloc get _questionBloc => widget.homeBloc;
 
   @override
   Widget build(BuildContext context) {
