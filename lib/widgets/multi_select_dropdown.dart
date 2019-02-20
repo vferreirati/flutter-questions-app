@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class MultiSelectDropDown<T> extends StatefulWidget {
   final List<T> items;
   final void Function(bool, T) onSelect;
-  final String Function(T) nameBuilder;
+  final String Function(T) onBuildName;
   final String title;
   final String errorMessage;
   final bool isLoading;
@@ -13,7 +13,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
       {@required this.items,
       @required this.onSelect,
       @required this.title,
-      @required this.nameBuilder,
+      @required this.onBuildName,
       this.errorMessage,
       this.isLoading = false});
 
@@ -21,7 +21,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
     return MultiSelectDropDown(
       onSelect: null,
       items: null,
-      nameBuilder: null,
+      onBuildName: null,
       title: title,
       errorMessage: null,
       isLoading: true,
@@ -31,7 +31,7 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   factory MultiSelectDropDown.error(
       {@required String title, @required String error}) {
     return MultiSelectDropDown(
-      nameBuilder: null,
+      onBuildName: null,
       onSelect: null,
       items: null,
       title: title,
@@ -44,10 +44,10 @@ class MultiSelectDropDown<T> extends StatefulWidget {
   _MultiSelectDropDownState<T> createState() => _MultiSelectDropDownState<T>();
 }
 
-class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown> {
+class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   List<T> get items => widget.items;
   void Function(bool, T) get onSelect => widget.onSelect;
-  String Function(T) get nameBuilder => widget.nameBuilder;
+  String Function(T) get onBuildName => widget.onBuildName;
   String get title => widget.title;
   bool get isLoading => widget.isLoading;
   String get errorMessage => widget.errorMessage;
@@ -71,7 +71,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown> {
   Widget _expandedDropDown() {
     var widgets = List<Widget>.from([_collapsedDropDown()]);
     items.forEach((item) {
-      var title = nameBuilder(item);
+      var title = onBuildName(item);
       var newTile = CheckboxListTile(
         value: _checkMapState[title],
         title: tileSubItemText(title: title),
@@ -118,7 +118,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown> {
       setState(() {
         _isExpanded = !_isExpanded;
         if (_isExpanded && _checkMapState.isEmpty) {
-          items.forEach((item) => _checkMapState[nameBuilder(item)] = false);
+          items.forEach((item) => _checkMapState[onBuildName(item)] = false);
         }
       });
     }
@@ -126,6 +126,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown> {
 
   void _onChecked(bool newValue, T item) {
     onSelect(newValue, item);
-    setState(() => _checkMapState[nameBuilder(item)] = newValue);
+    setState(() => _checkMapState[onBuildName(item)] = newValue);
   }
 }

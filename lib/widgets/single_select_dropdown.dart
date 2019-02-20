@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class SingleSelectDropDown<T> extends StatefulWidget {
   final void Function(T) onSelect;
-  final String Function(T) nameBuilder;
+  final String Function(T) onBuildName;
   final List<T> items;
   final String title;
   final String errorMessage;
@@ -13,7 +13,7 @@ class SingleSelectDropDown<T> extends StatefulWidget {
       {@required this.onSelect,
       @required this.items,
       @required this.title,
-      @required this.nameBuilder,
+      @required this.onBuildName,
       this.errorMessage,
       this.isLoading = false});
 
@@ -22,7 +22,7 @@ class SingleSelectDropDown<T> extends StatefulWidget {
       onSelect: null,
       items: null,
       title: title,
-      nameBuilder: null,
+      onBuildName: null,
       errorMessage: null,
       isLoading: true,
     );
@@ -33,7 +33,7 @@ class SingleSelectDropDown<T> extends StatefulWidget {
     return SingleSelectDropDown(
       onSelect: null,
       items: null,
-      nameBuilder: null,
+      onBuildName: null,
       title: title,
       errorMessage: error,
       isLoading: false,
@@ -41,11 +41,11 @@ class SingleSelectDropDown<T> extends StatefulWidget {
   }
 
   @override
-  _SingleSelectDropDownState createState() => _SingleSelectDropDownState<T>();
+  _SingleSelectDropDownState<T> createState() => _SingleSelectDropDownState<T>();
 }
 
-class _SingleSelectDropDownState<T> extends State<SingleSelectDropDown> {
-  String Function(T) get nameBuilder => widget.nameBuilder;
+class _SingleSelectDropDownState<T> extends State<SingleSelectDropDown<T>> {
+  String Function(T) get onBuildName => widget.onBuildName;
   void Function(T) get onSelect => widget.onSelect;
   List<T> get items => widget.items;
   String get title => widget.title;
@@ -53,13 +53,7 @@ class _SingleSelectDropDownState<T> extends State<SingleSelectDropDown> {
   bool get isLoading => widget.isLoading;
   bool get isErrorMode => errorMessage != null;
 
-  bool isExpanded;
-
-  @override
-  void initState() {
-    super.initState();
-    isExpanded = false;
-  }
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +89,9 @@ class _SingleSelectDropDownState<T> extends State<SingleSelectDropDown> {
 
   Widget _expandedDropDown() {
     var widgets = List<Widget>.from([_collapsedDropDown()]);
-
     items.forEach((item) {
-      var title = nameBuilder(item);
       var newTile = ListTile(
-        title: tileSubItemText(title: title),
+        title: tileSubItemText(title: onBuildName(item)),
         onTap: () => onSelect(item),
       );
 
