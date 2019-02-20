@@ -83,8 +83,7 @@ class QuestionsTab extends StatelessWidget {
                 title: "Matérias",
                 items: snapshot.data,
                 nameBuilder: (materia) => materia.nome,
-                onSelect: (isChecked, materia) =>
-                    print("${materia.nome} será buscado? $isChecked"),
+                onSelect: bloc.onAddMateria,
               );
             },
           );
@@ -114,8 +113,7 @@ class QuestionsTab extends StatelessWidget {
                 return MultiSelectDropDown(
                     items: snapshot.data,
                     nameBuilder: (ano) => ano,
-                    onSelect: (isChecked, ano) =>
-                        print("$ano será buscado? $isChecked"),
+                    onSelect: bloc.onAddAno,
                     title: "Anos");
               },
             );
@@ -159,10 +157,16 @@ class QuestionsTab extends StatelessWidget {
   Widget _submitButton() {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: GradientButton(
-            onClick: () => print("Clicked to start"),
-            title: "Iniciar",
-            isLoading: false));
+        child: StreamBuilder<bool>(
+          stream: bloc.loadingQuestoes,
+          initialData: false,
+          builder: (context, snapshot) {
+            return GradientButton(
+                onClick: bloc.onLoadQuestoes,
+                title: "Iniciar",
+                isLoading: snapshot.data);
+          },
+        ));
   }
 
   void _showUserProfile() {

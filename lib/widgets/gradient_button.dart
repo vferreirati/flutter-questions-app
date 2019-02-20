@@ -21,16 +21,16 @@ class _GradientButtonState extends State<GradientButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      alignment: AlignmentDirectional.center,
-      decoration: BoxDecoration(
-          gradient: buttonGradient(), borderRadius: BorderRadius.circular(5)),
-      child: Material(
-        elevation: 2,
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onClick,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onClick,
+        child: Container(
+          height: 60,
+          alignment: AlignmentDirectional.center,
+          decoration: BoxDecoration(
+              gradient: buttonGradient(),
+              borderRadius: BorderRadius.circular(5)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

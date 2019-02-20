@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:exata_questoes_app/models/api/materia_model.dart';
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
+import 'package:exata_questoes_app/models/filtro_model.dart';
 import 'package:exata_questoes_app/services/ano/ano_mock_service.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_mock_service.dart';
@@ -14,6 +15,7 @@ class QuestionBloc {
   SimuladoService _simuladoService;
   AnoService _anoService;
   MateriaService _materiaService;
+  FiltroModel _filtro;
 
   final _simulados = BehaviorSubject<List<SimuladoModel>>();
   final _anos = BehaviorSubject<List<String>>();
@@ -21,6 +23,7 @@ class QuestionBloc {
   final _loadingSimulados = BehaviorSubject<bool>();
   final _loadingAnos = BehaviorSubject<bool>();
   final _loadingMaterias = BehaviorSubject<bool>();
+  final _loadingQuestoes = BehaviorSubject<bool>();
 
   Stream<List<String>> get anos => _anos.stream;
   Stream<List<SimuladoModel>> get simulados => _simulados.stream;
@@ -28,16 +31,19 @@ class QuestionBloc {
   Stream<bool> get loadingSimulados => _loadingSimulados.stream;
   Stream<bool> get loadingAnos => _loadingAnos.stream;
   Stream<bool> get loadingMaterias => _loadingMaterias.stream;
+  Stream<bool> get loadingQuestoes => _loadingQuestoes.stream;
 
   QuestionBloc() {
     _simuladoService = SimuladoMockService();
     _anoService = AnoMockService();
     _materiaService = MateriaMockService();
+    _filtro = FiltroModel();
 
     onRefresh();
   }
 
   Future<Null> onRefresh() async {
+    _filtro = FiltroModel();
     _loadSimulados();
     _loadAnos();
     _loadMaterias();
@@ -84,6 +90,27 @@ class QuestionBloc {
     _loadingMaterias.add(false);
   }
 
+  void onLoadQuestoes() async {
+    _loadingQuestoes.add(true);
+
+    print(
+        "Buscando questões das materias: ${_filtro.materias}\nBuscando questões dos anos: ${_filtro.anos}");
+    await Future.delayed(Duration(seconds: 2));
+
+    _loadingQuestoes.add(false);
+  }
+
+  // TODO: Corrigir parametro de tipo nos dropdowns
+  void onAddMateria(bool wasAdded, dynamic materia) {
+    wasAdded
+        ? _filtro.materias.add(materia.id)
+        : _filtro.materias.remove(materia.id);
+  }
+
+  void onAddAno(bool wasAdded, dynamic ano) {
+    wasAdded ? _filtro.anos.add(ano) : _filtro.anos.remove(ano);
+  }
+
   void dispose() {
     _simulados.close();
     _anos.close();
@@ -91,5 +118,6 @@ class QuestionBloc {
     _loadingSimulados.close();
     _loadingAnos.close();
     _loadingMaterias.close();
+    _loadingQuestoes.close();
   }
 }
