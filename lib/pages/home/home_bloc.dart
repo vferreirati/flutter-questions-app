@@ -69,11 +69,18 @@ class HomeBloc {
     _loadingSimulados.add(false);
   }
 
-  void onSelectSimulado(SimuladoModel simulado) {
+  void onSelectSimulado(BuildContext context, SimuladoModel simulado) async {
     _loadingQuestoes.add(true);
-    print("O simulado escolhido foi ${simulado.nome}:${simulado.id}");
 
-    Future.delayed(Duration(seconds: 2));
+    final response = await _simuladoService.getSimuladoAsync(simulado.id);
+    if(response.success) {
+      final simulado = response.data;
+      print("Iniciando questões com o simulado ${simulado.nome} e questoes ${simulado.questoes}");
+
+    } else {
+      final snackbar = SnackBar(content: Text(response.errors.first));
+      Scaffold.of(context).showSnackBar(snackbar);
+    }
 
     _loadingQuestoes.add(false);
   }

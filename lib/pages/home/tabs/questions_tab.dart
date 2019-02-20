@@ -22,7 +22,7 @@ class QuestionsTab extends StatelessWidget {
           child: Column(
             children: <Widget>[
               _userAvatarBadge(),
-              _questionFilters(),
+              _questionFilters(context),
               SizedBox(height: 15),
               _submitButton(context)
             ],
@@ -43,7 +43,7 @@ class QuestionsTab extends StatelessWidget {
     );
   }
 
-  Widget _questionFilters() {
+  Widget _questionFilters(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 10, left: 8, right: 8),
       child: Card(
@@ -51,7 +51,7 @@ class QuestionsTab extends StatelessWidget {
           padding: EdgeInsets.only(top: 5, left: 10, right: 10),
           child: Column(
             children: <Widget>[
-              _simuladoFilter(),
+              _simuladoFilter(context),
               Divider(),
               _materiaFilter(),
               Divider(),
@@ -122,7 +122,7 @@ class QuestionsTab extends StatelessWidget {
         });
   }
 
-  Widget _simuladoFilter() {
+  Widget _simuladoFilter(BuildContext context) {
     return StreamBuilder<bool>(
       initialData: true,
       stream: bloc.loadingSimulados,
@@ -142,7 +142,7 @@ class QuestionsTab extends StatelessWidget {
                 title: "Simulados",
                 items: snapshot.data,
                 onBuildName: (simulado) => simulado.nome,
-                onSelect: bloc.onSelectSimulado,
+                onSelect: (simulado) => bloc.onSelectSimulado(context, simulado),
               );
             },
           );
