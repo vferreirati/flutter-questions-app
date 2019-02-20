@@ -7,21 +7,6 @@ import 'package:exata_questoes_app/models/filtro_model.dart';
 import 'package:exata_questoes_app/services/questao/questao_service.dart';
 
 class QuestaoMockService implements QuestaoService {
-  static final questoes = [
-    QuestaoModel(
-      id: 1,
-      enunciado: "Isso é uma questão de teste, favor ignorar...",
-      ano: "2018",
-      explicacao: null,
-      banca: BancaModel(id: 1, nome: "ENEM"),
-      alternativas: [
-        AlternativaModel(corpo: "Item A", correta: true),
-        AlternativaModel(corpo: "Item B", correta: false),
-        AlternativaModel(corpo: "Item C", correta: false),
-        AlternativaModel(corpo: "Item D", correta: false),
-      ]
-    )
-  ];
 
   @override
   Future<ResponseListModel<QuestaoModel>> getNextPageQuestoesAsync(String nextPageUrl) async {
@@ -43,6 +28,7 @@ class QuestaoMockService implements QuestaoService {
         id: index,
         enunciado: "Questao com ID: $index",
         ano: (2019 - index).toString(),
+        banca: BancaModel(id: 1, nome: "ENEM"),
         materia: MateriaModel(id: index, nome: "Materia $index"),
         alternativas: [
           AlternativaModel(corpo: "Alternativa A", correta: true),
