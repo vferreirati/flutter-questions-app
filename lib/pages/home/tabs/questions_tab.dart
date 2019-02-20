@@ -24,7 +24,7 @@ class QuestionsTab extends StatelessWidget {
               _userAvatarBadge(),
               _questionFilters(),
               SizedBox(height: 15),
-              _submitButton()
+              _submitButton(context)
             ],
           ),
         ),
@@ -153,7 +153,7 @@ class QuestionsTab extends StatelessWidget {
     );
   }
 
-  Widget _submitButton() {
+  Widget _submitButton(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: StreamBuilder<bool>(
@@ -161,9 +161,10 @@ class QuestionsTab extends StatelessWidget {
           initialData: false,
           builder: (context, snapshot) {
             return GradientButton(
-                onClick: bloc.onLoadQuestoes,
-                title: "Iniciar",
-                isLoading: snapshot.data);
+              onClick: () => bloc.onLoadQuestoes(context),
+              title: "Iniciar",
+              isLoading: snapshot.data
+            );
           },
         ));
   }

@@ -7,14 +7,18 @@ import 'package:exata_questoes_app/services/ano/ano_mock_service.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_mock_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_service.dart';
+import 'package:exata_questoes_app/services/questao/questao_mock_service.dart';
+import 'package:exata_questoes_app/services/questao/questao_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_mock_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_service.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeBloc {
   SimuladoService _simuladoService;
   AnoService _anoService;
   MateriaService _materiaService;
+  QuestaoService _questaoService;
   FiltroModel _filtro;
 
   final _simulados = BehaviorSubject<List<SimuladoModel>>();
@@ -37,6 +41,7 @@ class HomeBloc {
     _simuladoService = SimuladoMockService();
     _anoService = AnoMockService();
     _materiaService = MateriaMockService();
+    _questaoService = QuestaoMockService();
     _filtro = FiltroModel();
 
     onRefresh();
@@ -99,12 +104,27 @@ class HomeBloc {
     _loadingMaterias.add(false);
   }
 
-  void onLoadQuestoes() async {
+  void onLoadQuestoes(BuildContext context) async {
     _loadingQuestoes.add(true);
 
-    print(
-        "Buscando questões das materias: ${_filtro.materias}\nBuscando questões dos anos: ${_filtro.anos}");
-    await Future.delayed(Duration(seconds: 2));
+    final response = await _questaoService.getQuestoesAsync(_filtro);
+    if(response.success) {
+
+      if(response.data.length == 0) {
+        final snackbar = SnackBar(content: Text("Nenhuma questão encontrada com o filtro aplicado"));
+        Scaffold.of(context).showSnackBar(snackbar);
+
+      } else {
+        final questoes = response.data;
+        print("Iniciar questões com: $questoes");
+
+      }
+
+
+    } else {
+      final snackbar = SnackBar(content: Text(response.errors.first));
+      Scaffold.of(context).showSnackBar(snackbar);
+    }
 
     _loadingQuestoes.add(false);
   }
