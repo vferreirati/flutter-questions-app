@@ -64,6 +64,15 @@ class QuestionBloc {
     _loadingSimulados.add(false);
   }
 
+  void onSelectSimulado(SimuladoModel simulado) {
+    _loadingQuestoes.add(true);
+    print("O simulado escolhido foi ${simulado.nome}:${simulado.id}");
+
+    Future.delayed(Duration(seconds: 2));
+
+    _loadingQuestoes.add(false);
+  }
+
   void _loadAnos() async {
     _loadingAnos.add(true);
 
@@ -100,14 +109,13 @@ class QuestionBloc {
     _loadingQuestoes.add(false);
   }
 
-  // TODO: Corrigir parametro de tipo nos dropdowns
-  void onAddMateria(bool wasAdded, dynamic materia) {
+  void onAddMateria(bool wasAdded, MateriaModel materia) {
     wasAdded
         ? _filtro.materias.add(materia.id)
         : _filtro.materias.remove(materia.id);
   }
 
-  void onAddAno(bool wasAdded, dynamic ano) {
+  void onAddAno(bool wasAdded, String ano) {
     wasAdded ? _filtro.anos.add(ano) : _filtro.anos.remove(ano);
   }
 

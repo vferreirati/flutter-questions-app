@@ -79,10 +79,10 @@ class QuestionsTab extends StatelessWidget {
                   error: "Erro ao buscar matérias",
                 );
               }
-              return MultiSelectDropDown(
+              return MultiSelectDropDown<MateriaModel>(
                 title: "Matérias",
                 items: snapshot.data,
-                nameBuilder: (materia) => materia.nome,
+                onBuildName: (materia) => materia.nome,
                 onSelect: bloc.onAddMateria,
               );
             },
@@ -110,9 +110,9 @@ class QuestionsTab extends StatelessWidget {
                     title: "Anos",
                   );
                 }
-                return MultiSelectDropDown(
+                return MultiSelectDropDown<String>(
                     items: snapshot.data,
-                    nameBuilder: (ano) => ano,
+                    onBuildName: (ano) => ano,
                     onSelect: bloc.onAddAno,
                     title: "Anos");
               },
@@ -138,12 +138,11 @@ class QuestionsTab extends StatelessWidget {
                   error: "Erro ao carregar simulados",
                 );
               }
-              return SingleSelectDropDown(
+              return SingleSelectDropDown<SimuladoModel>(
                 title: "Simulados",
                 items: snapshot.data,
-                nameBuilder: (simulado) => simulado.nome,
-                onSelect: (simulado) => print(
-                    "O simulado escolhido foi ${simulado.nome}:${simulado.id}"),
+                onBuildName: (simulado) => simulado.nome,
+                onSelect: bloc.onSelectSimulado,
               );
             },
           );
