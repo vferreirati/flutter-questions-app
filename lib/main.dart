@@ -12,6 +12,7 @@ class ExataApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Exata Questões",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.blue[800],

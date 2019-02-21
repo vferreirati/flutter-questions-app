@@ -38,6 +38,7 @@ class _QuizPageState extends State<QuizPage> {
     return Scaffold(
       appBar: AppBar(
         title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
+        centerTitle: true,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.warning),
