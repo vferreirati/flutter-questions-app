@@ -3,13 +3,9 @@ import 'dart:async';
 import 'package:exata_questoes_app/models/api/materia_model.dart';
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
 import 'package:exata_questoes_app/models/filtro_model.dart';
-import 'package:exata_questoes_app/services/ano/ano_mock_service.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
-import 'package:exata_questoes_app/services/materia/materia_mock_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_service.dart';
-import 'package:exata_questoes_app/services/questao/questao_mock_service.dart';
 import 'package:exata_questoes_app/services/questao/questao_service.dart';
-import 'package:exata_questoes_app/services/simulado/simulado_mock_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
@@ -37,13 +33,10 @@ class HomeBloc {
   Stream<bool> get loadingMaterias => _loadingMaterias.stream;
   Stream<bool> get loadingQuestoes => _loadingQuestoes.stream;
 
-  HomeBloc() {
-    _simuladoService = SimuladoMockService();
-    _anoService = AnoMockService();
-    _materiaService = MateriaMockService();
-    _questaoService = QuestaoMockService();
-    _filtro = FiltroModel();
+  HomeBloc(this._simuladoService, this._anoService, this._materiaService,
+      this._questaoService) {
 
+    _filtro = FiltroModel();
     onRefresh();
   }
 
