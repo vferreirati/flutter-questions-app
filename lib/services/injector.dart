@@ -1,5 +1,6 @@
 import 'package:exata_questoes_app/network/base/request_service.dart';
 import 'package:exata_questoes_app/pages/home/home_bloc.dart';
+import 'package:exata_questoes_app/pages/quiz/quiz_bloc.dart';
 import 'package:exata_questoes_app/services/ano/ano_mock_service.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_mock_service.dart';
@@ -19,6 +20,7 @@ abstract class Injector {
   @Register.singleton(QuestaoService, from: QuestaoMockService)
   @Register.singleton(SimuladoService, from: SimuladoMockService)
   @Register.factory(HomeBloc)
+  @Register.factory(QuizBloc)
   void configure();
 }
 

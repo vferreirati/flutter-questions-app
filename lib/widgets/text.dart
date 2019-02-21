@@ -21,3 +21,13 @@ Widget tileSubItemText({@required String title, Color color = Colors.black}) {
     ),
   );
 }
+
+Widget appBarTitle(String text) {
+  return Text(
+    text,
+    style: TextStyle(
+      fontFamily: "MavenPro",
+      fontSize: 26
+    ),
+  );
+}

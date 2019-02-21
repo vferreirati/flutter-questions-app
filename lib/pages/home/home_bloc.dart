@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:exata_questoes_app/models/api/materia_model.dart';
 import 'package:exata_questoes_app/models/api/simulado_model.dart';
 import 'package:exata_questoes_app/models/filtro_model.dart';
+import 'package:exata_questoes_app/pages/quiz/quiz_page.dart';
 import 'package:exata_questoes_app/services/ano/ano_service.dart';
 import 'package:exata_questoes_app/services/materia/materia_service.dart';
 import 'package:exata_questoes_app/services/questao/questao_service.dart';
 import 'package:exata_questoes_app/services/simulado/simulado_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:kiwi/kiwi.dart' as kiwi;
 
 class HomeBloc {
   SimuladoService _simuladoService;
@@ -26,16 +28,21 @@ class HomeBloc {
   final _loadingQuestoes = BehaviorSubject<bool>();
 
   Stream<List<String>> get anos => _anos.stream;
+
   Stream<List<SimuladoModel>> get simulados => _simulados.stream;
+
   Stream<List<MateriaModel>> get materias => _materias.stream;
+
   Stream<bool> get loadingSimulados => _loadingSimulados.stream;
+
   Stream<bool> get loadingAnos => _loadingAnos.stream;
+
   Stream<bool> get loadingMaterias => _loadingMaterias.stream;
+
   Stream<bool> get loadingQuestoes => _loadingQuestoes.stream;
 
   HomeBloc(this._simuladoService, this._anoService, this._materiaService,
       this._questaoService) {
-
     _filtro = FiltroModel();
     onRefresh();
   }
@@ -60,22 +67,6 @@ class HomeBloc {
     }
 
     _loadingSimulados.add(false);
-  }
-
-  void onSelectSimulado(BuildContext context, SimuladoModel simulado) async {
-    _loadingQuestoes.add(true);
-
-    final response = await _simuladoService.getSimuladoAsync(simulado.id);
-    if(response.success) {
-      final simulado = response.data;
-      print("Iniciando questões com o simulado ${simulado.nome} e questoes ${simulado.questoes}");
-
-    } else {
-      final snackbar = SnackBar(content: Text(response.errors.first));
-      Scaffold.of(context).showSnackBar(snackbar);
-    }
-
-    _loadingQuestoes.add(false);
   }
 
   void _loadAnos() async {
@@ -108,18 +99,43 @@ class HomeBloc {
     _loadingQuestoes.add(true);
 
     final response = await _questaoService.getQuestoesAsync(_filtro);
-    if(response.success) {
-
-      if(response.data.length == 0) {
-        final snackbar = SnackBar(content: Text("Nenhuma questão encontrada com o filtro aplicado"));
+    if (response.success) {
+      if (response.data.length == 0) {
+        final snackbar = SnackBar(
+            content: Text("Nenhuma questão encontrada com o filtro aplicado"));
         Scaffold.of(context).showSnackBar(snackbar);
-
       } else {
         final questoes = response.data;
-        print("Iniciar questões com: $questoes");
-
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => QuizPage(
+                bloc: kiwi.Container().resolve(),
+                filtro: _filtro,
+                initialQuestions: questoes,
+                isHardcoreMode: false)));
       }
+    } else {
+      final snackbar = SnackBar(content: Text(response.errors.first));
+      Scaffold.of(context).showSnackBar(snackbar);
+    }
 
+    _loadingQuestoes.add(false);
+  }
+
+  void onSelectSimulado(BuildContext context, SimuladoModel simulado) async {
+    _loadingQuestoes.add(true);
+
+    final response = await _simuladoService.getSimuladoAsync(simulado.id);
+    if (response.success) {
+      simulado = response.data;
+      final route = MaterialPageRoute(
+        builder: (context) => QuizPage(
+          initialQuestions: simulado.questoes,
+          filtro: null,
+          bloc: kiwi.Container().resolve(),
+          isHardcoreMode: true,
+        )
+      );
+      Navigator.of(context).push(route);
 
     } else {
       final snackbar = SnackBar(content: Text(response.errors.first));

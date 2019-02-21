@@ -20,5 +20,6 @@ class _$Injector extends Injector {
         (c) => SimuladoMockService());
     container.registerFactory((c) => HomeBloc(c<SimuladoService>(),
         c<AnoService>(), c<MateriaService>(), c<QuestaoService>()));
+    container.registerFactory((c) => QuizBloc(c<QuestaoService>()));
   }
 }
