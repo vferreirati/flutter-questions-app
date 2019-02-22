@@ -28,19 +28,14 @@ class _QuizPageState extends State<QuizPage> {
   QuizBloc get _bloc => widget.bloc;
 
   @override
-  void initState() {
-    super.initState();
-    _bloc.setup(_initialQuestions);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _bloc.setup(_initialQuestions);
     return Scaffold(
       appBar: AppBar(
         title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.warning), onPressed: _onNotifyBadQuestion)
+          IconButton(icon: Icon(Icons.warning), onPressed: () => _onNotifyBadQuestion(context))
         ],
       ),
       body: StreamBuilder<List<QuestaoModel>>(
@@ -135,8 +130,49 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  void _onNotifyBadQuestion() {
-    print("Apertou para notificar erro na questão!");
+  void _onNotifyBadQuestion(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: dialogTitle(title: "Informar erro na questão:"),
+        content: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 100,
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: Text("As alternativas estão incorretas"),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Enviar",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Cancelar",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      )
+    );
   }
 
   @override

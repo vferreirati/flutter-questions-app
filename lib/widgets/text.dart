@@ -31,3 +31,14 @@ Widget appBarTitle(String text) {
     ),
   );
 }
+
+Widget dialogTitle({@required String title, Color color = Colors.blue}) {
+  return Text(
+    title,
+    style: TextStyle(
+      fontFamily: "MavenPro",
+      fontSize: 18,
+      color: color,
+    ),
+  );
+}
