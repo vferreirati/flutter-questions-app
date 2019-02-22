@@ -42,33 +42,32 @@ class _QuizPageState extends State<QuizPage> {
           IconButton(icon: Icon(Icons.warning), onPressed: _onNotifyBadQuestion)
         ],
       ),
-      body: Container(
-        child: StreamBuilder<List<QuestaoModel>>(
-          initialData: _initialQuestions,
-          stream: _bloc.questoes,
-          builder: (context, snapshot) {
-            return PageView.builder(
-              controller: _bloc.pageController,
-              itemCount: _bloc.calculatePageCount(),
-              onPageChanged: _bloc.onPageChanged,
-              itemBuilder: (context, index) =>
-                  _buildPageItem(context, index, snapshot.data[index]),
-            );
-          },
-        ),
+      body: StreamBuilder<List<QuestaoModel>>(
+        stream: _bloc.questoes,
+        initialData: _initialQuestions,
+        builder: (context, snapshot) {
+          return PageView.builder(
+            controller: _bloc.pageController,
+            itemCount: _bloc.calculatePageCount(),
+            onPageChanged: _bloc.onPageChanged,
+            itemBuilder: (context, index) => _buildPageItem(context, index, snapshot.data[index]),
+          );
+        },
       ),
     );
   }
 
   Widget _buildPageItem(BuildContext context, int index, QuestaoModel questao) {
-    return Container(
-      padding: EdgeInsets.only(top: 10, left: 8, right: 8),
-      child: Column(
-        children: <Widget>[
-          _buildEnunciado(questao),
-          SizedBox(height: 10),
-          Column(children: _buildAlternativas(questao))
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.only(top: 10, left: 8, right: 8),
+        child: Column(
+          children: <Widget>[
+            _buildEnunciado(questao),
+            SizedBox(height: 10),
+            Column(children: _buildAlternativas(questao))
+          ],
+        ),
       ),
     );
   }
@@ -126,5 +125,6 @@ class _QuizPageState extends State<QuizPage> {
   void dispose() {
     super.dispose();
     _bloc.dispose();
+    print("On dispose");
   }
 }

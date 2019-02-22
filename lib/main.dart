@@ -1,10 +1,12 @@
 import 'package:exata_questoes_app/pages/home/home_page.dart';
 import 'package:exata_questoes_app/services/injector.dart';
+import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   setup();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(ExataApp());
 }
 

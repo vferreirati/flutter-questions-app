@@ -29,7 +29,7 @@ class QuizBloc {
   }
 
   int calculatePageCount() {
-    final totalQuestions = questoesList.length;
+    final totalQuestions = _questoes.value.length;
     final numberOfAds = (totalQuestions / adInterval).floor() - 1;
     return totalQuestions;
   }
