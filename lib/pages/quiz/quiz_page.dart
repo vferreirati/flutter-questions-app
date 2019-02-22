@@ -1,3 +1,4 @@
+import 'package:exata_questoes_app/models/api/alternativa_model.dart';
 import 'package:exata_questoes_app/models/api/questao_model.dart';
 import 'package:exata_questoes_app/models/filtro_model.dart';
 import 'package:exata_questoes_app/pages/quiz/quiz_bloc.dart';
@@ -91,7 +92,7 @@ class _QuizPageState extends State<QuizPage> {
         onTap: () => _bloc.onAlternativaSelected(questao.id, alternativa.id),
         child: Card(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: StreamBuilder<List<RespostaModel>>(
               stream: _bloc.respostas,
               initialData: [],
@@ -100,13 +101,23 @@ class _QuizPageState extends State<QuizPage> {
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Radio<int>(
-                      value: questao.alternativas[index].id,
-                      groupValue: resposta == null ? -1 : resposta.alternativaId,
-                      onChanged: (alternativaId) => _bloc.onAlternativaSelected(questao.id, alternativaId),
+                    Expanded(
+                      child: Radio<int>(
+                        value: questao.alternativas[index].id,
+                        groupValue: resposta == null ? -1 : resposta.alternativaId,
+                        onChanged: (alternativaId) => _bloc.onAlternativaSelected(questao.id, alternativaId),
+                      ),
                     ),
-                    Text(alternativa.corpo,
-                        style: TextStyle(fontFamily: "MavenPro", fontSize: 12))
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        alternativa.corpo,
+                        style: TextStyle(fontFamily: "MavenPro", fontSize: 12)
+                      ),
+                    ),
+                    Expanded(
+                      child: (resposta == null && !_isHardcoreMode) ? Container() : _buildAlternativaIcon(alternativa),
+                    )
                   ],
                 );
               },
@@ -115,6 +126,13 @@ class _QuizPageState extends State<QuizPage> {
         ),
       );
     });
+  }
+
+  Widget _buildAlternativaIcon(AlternativaModel alternativa) {
+    return Icon(
+      alternativa.correta ? Icons.check : Icons.close,
+      color: alternativa.correta ? Colors.greenAccent : Colors.redAccent,
+    );
   }
 
   void _onNotifyBadQuestion() {
