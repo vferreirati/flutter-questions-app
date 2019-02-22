@@ -25,12 +25,11 @@ class _QuizPageState extends State<QuizPage> {
   bool get _isHardcoreMode => widget.isHardcoreMode;
   List<QuestaoModel> get _initialQuestions => widget.initialQuestions;
   QuizBloc get _bloc => widget.bloc;
-  FiltroModel get _filtro => widget.filtro;
 
   @override
   void initState() {
     super.initState();
-    _bloc.setup(_initialQuestions, _filtro);
+    _bloc.setup(_initialQuestions);
   }
 
   @override
@@ -89,28 +88,30 @@ class _QuizPageState extends State<QuizPage> {
   List<Widget> _buildAlternativas(QuestaoModel questao) {
     return List<Widget>.generate(questao.alternativas.length, (index) {
       final alternativa = questao.alternativas[index];
-      return Card(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-          child: StreamBuilder<Map<int, bool>>(
-            stream: _bloc.questoesRespondidasMap,
-            builder: (context, snapshot) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Radio(
-                    value: index,
-                    groupValue: snapshot.data[index]
-                        ? (alternativa.correta ? index : -1)
-                        : -1,
-                    onChanged: (alternativa) =>
-                        _bloc.onAlternativaSelected(questao.id),
-                  ),
-                  Text(alternativa.corpo,
-                      style: TextStyle(fontFamily: "MavenPro", fontSize: 12))
-                ],
-              );
-            },
+      return GestureDetector(
+        onTap: () => _bloc.onAlternativaSelected(questao.id, alternativa.id),
+        child: Card(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            child: StreamBuilder<List<RespostaModel>>(
+              stream: _bloc.respostas,
+              initialData: [],
+              builder: (context, snapshot) {
+                final resposta = snapshot.data?.firstWhere((resp) => resp.questaoId == questao.id, orElse: () => null);
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Radio<int>(
+                      value: questao.alternativas[index].id,
+                      groupValue: resposta == null ? -1 : resposta.alternativaId,
+                      onChanged: (alternativaId) => _bloc.onAlternativaSelected(questao.id, alternativaId),
+                    ),
+                    Text(alternativa.corpo,
+                        style: TextStyle(fontFamily: "MavenPro", fontSize: 12))
+                  ],
+                );
+              },
+            ),
           ),
         ),
       );
