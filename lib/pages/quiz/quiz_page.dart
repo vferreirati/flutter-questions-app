@@ -79,7 +79,7 @@ class _QuizPageState extends State<QuizPage> {
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
         child: Text(
           "[${questao.banca.nome} - ${questao.ano}] ${questao.enunciado}",
-          style: TextStyle(fontFamily: "MavenPro", fontSize: 12),
+          style: TextStyle(fontFamily: "MavenPro", fontSize: 15),
         ),
       ),
     );
@@ -112,11 +112,11 @@ class _QuizPageState extends State<QuizPage> {
                       flex: 3,
                       child: Text(
                         alternativa.corpo,
-                        style: TextStyle(fontFamily: "MavenPro", fontSize: 12)
+                        style: TextStyle(fontFamily: "MavenPro", fontSize: 13)
                       ),
                     ),
                     Expanded(
-                      child: (resposta == null && !_isHardcoreMode) ? Container() : _buildAlternativaIcon(alternativa),
+                      child: (resposta == null ) ? Container() : ((_isHardcoreMode) ? Container() :_buildAlternativaIcon(alternativa)) ,
                     )
                   ],
                 );
