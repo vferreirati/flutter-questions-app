@@ -11,6 +11,7 @@ class QuizBloc {
   List<RespostaModel> respostasList;
   List<QuestaoModel> questoesList;
   TextEditingController errorTextController;
+  int _idQuestaoAtual;
 
   final _questoes = BehaviorSubject<List<QuestaoModel>>();
   final _respostas = BehaviorSubject<List<RespostaModel>>();
@@ -28,6 +29,7 @@ class QuizBloc {
     questoesList = initialQuestions;
     _questoes.add(questoesList);
     _respostas.add(respostasList);
+    _idQuestaoAtual = questoesList.first.id;
   }
 
   int calculatePageCount() {
@@ -37,7 +39,7 @@ class QuizBloc {
   }
 
   void onPageChanged(int index) {
-
+    _idQuestaoAtual = index;
   }
 
   void onAlternativaSelected(int questaoId, int alternativaId) {
@@ -58,7 +60,7 @@ class QuizBloc {
   }
 
   void onErrorSubmit(BuildContext context) {
-    final snackbar = SnackBar(content: Text("Erro informado com sucesso!"));
+    final snackbar = SnackBar(content: Text("Erro na questão com id $_idQuestaoAtual informado com sucesso"));
     Scaffold.of(context).showSnackBar(snackbar);
   }
 

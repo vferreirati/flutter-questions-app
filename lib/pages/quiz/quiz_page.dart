@@ -31,12 +31,17 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     _bloc.setup(_initialQuestions);
     return Scaffold(
-      appBar: AppBar(
-        title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.warning), onPressed: () => _onNotifyBadQuestion(context))
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56),
+        child: Builder(
+          builder: (builderContext) => AppBar(
+            title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
+            centerTitle: true,
+            actions: <Widget>[
+              IconButton(icon: Icon(Icons.warning), onPressed: () => _onNotifyBadQuestion(builderContext))
+            ],
+          ),
+        ),
       ),
       body: StreamBuilder<List<QuestaoModel>>(
         stream: _bloc.questoes,
