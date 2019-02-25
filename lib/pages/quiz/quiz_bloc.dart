@@ -10,6 +10,7 @@ class QuizBloc {
   static const adInterval = 5;
   List<RespostaModel> respostasList;
   List<QuestaoModel> questoesList;
+  TextEditingController errorTextController;
 
   final _questoes = BehaviorSubject<List<QuestaoModel>>();
   final _respostas = BehaviorSubject<List<RespostaModel>>();
@@ -20,6 +21,7 @@ class QuizBloc {
   QuizBloc(this._questaoService) {
     pageController = PageController();
     respostasList = List<RespostaModel>();
+    errorTextController = TextEditingController();
   }
 
   void setup(List<QuestaoModel> initialQuestions) {
@@ -53,6 +55,11 @@ class QuizBloc {
     print(respostasList);
 
     _respostas.add(respostasList);
+  }
+
+  void onErrorSubmit(BuildContext context) {
+    final snackbar = SnackBar(content: Text("Erro informado com sucesso!"));
+    Scaffold.of(context).showSnackBar(snackbar);
   }
 
   void dispose() {

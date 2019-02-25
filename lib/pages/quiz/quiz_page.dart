@@ -130,46 +130,56 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  void _onNotifyBadQuestion(BuildContext context) {
+  void _onNotifyBadQuestion(BuildContext scaffoldContext) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: dialogTitle(title: "Informar erro na questão:"),
-        content: Container(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 100,
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  border: Border.all(
-                    color: Colors.grey,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextField(
+              controller: _bloc.errorTextController,
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: "O que há de errado?",
+                hintStyle: TextStyle(
+                  fontFamily: "MavenPro"
+                )
+              ),
+            ),
+            SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    _bloc.onErrorSubmit(scaffoldContext);
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Enviar",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontFamily: "MavenPro"
+                    ),
                   ),
                 ),
-                child: Text("As alternativas estão incorretas"),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Enviar",
-                      style: TextStyle(color: Colors.blue),
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    "Cancelar",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 18,
+                      fontFamily: "MavenPro"
                     ),
                   ),
-                  FlatButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Cancelar",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+                ),
+              ],
+            )
+          ],
         ),
       )
     );
