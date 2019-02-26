@@ -54,10 +54,6 @@ class _QuizPageState extends State<QuizPage> {
               itemCount: snapshot.data.length + 1,
               onPageChanged: _bloc.onPageChanged,
               itemBuilder: (context, index) {
-                if (_isHardcoreMode && _bloc.isLastPage(index)) {
-                  return _buildResultItem(context);
-                }
-
                 return _buildQuestaoItem(context, snapshot.data[index]);
               });
         },
@@ -78,78 +74,7 @@ class _QuizPageState extends State<QuizPage> {
         ),
       ),
     );
-  }
-
-  Widget _buildResultItem(context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(top: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _buildPartyEmoji(),
-            SizedBox(
-              height: 30,
-            ),
-            Text(
-              "Parabéns!",
-              style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "MavenPro",
-                  color: Theme.of(context).primaryColor),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              "Você concluiu o simulado ENEM 2019!",
-              style: TextStyle(fontSize: 20, fontFamily: "MavenPro"),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Text(
-              "5 de 10 questões de português corretas",
-              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "5 de 10 questões de matemática corretas",
-              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "5 de 10 questões de física corretas",
-              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "5 de 10 questões de química corretas",
-              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-            ),
-            SizedBox(
-              height: 10,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPartyEmoji() {
-    return Image.asset(
-      "assets/images/party_emoji.png",
-      height: 128,
-      width: 128,
-    );
-  }
+  } 
 
   Widget _buildEnunciado(QuestaoModel questao) {
     return Card(
