@@ -56,10 +56,9 @@ class QuizBloc {
           (resposta) => resposta.questaoId == questaoId)] = resposta;
     }
     _respostas.add(respostasList);
-    _verificarQuestoesRespondidas();
   }
 
-  void _verificarQuestoesRespondidas() {
+  void verificarQuestoesRespondidas() {
     final listaRespostas = _respostas.value;
     final listaQuestoes = _questoes.value;
 

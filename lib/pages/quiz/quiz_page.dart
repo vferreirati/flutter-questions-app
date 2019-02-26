@@ -92,7 +92,12 @@ class _QuizPageState extends State<QuizPage> {
     return List<Widget>.generate(questao.alternativas.length, (index) {
       final alternativa = questao.alternativas[index];
       return GestureDetector(
-        onTap: () => _bloc.onAlternativaSelected(questao.id, alternativa.id),
+        onTap: () {
+          _bloc.onAlternativaSelected(questao.id, alternativa.id);
+          if(_isHardcoreMode) {
+            _bloc.verificarQuestoesRespondidas();
+          }
+        },
         child: Card(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -111,8 +116,12 @@ class _QuizPageState extends State<QuizPage> {
                         value: questao.alternativas[index].id,
                         groupValue:
                             resposta == null ? -1 : resposta.alternativaId,
-                        onChanged: (alternativaId) => _bloc
-                            .onAlternativaSelected(questao.id, alternativaId),
+                        onChanged: (alternativaId) {
+                          _bloc.onAlternativaSelected(questao.id, alternativaId);
+                          if(_isHardcoreMode) {
+                            _bloc.verificarQuestoesRespondidas();
+                          }
+                        },
                       ),
                     ),
                     Expanded(
