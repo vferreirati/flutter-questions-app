@@ -10,7 +10,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0"
 
 dependencies:
   flutter:
@@ -76,8 +76,13 @@ flutter:
     - assets/images/avatar-placeholder.png
     - assets/images/2x/avatar-placeholder.png
     - assets/images/3x/avatar-placeholder.png
+    - assets/images/party_emoji.png
+    - assets/images/2x/party_emoji.png
+    - assets/images/3x/party_emoji.png
 
   fonts:
     - family: MavenPro
       fonts:
         - asset: assets/fonts/MavenPro-Regular.ttf
+        - asset: assets/fonts/MavenPro-Bold.ttf
+          weight: 700

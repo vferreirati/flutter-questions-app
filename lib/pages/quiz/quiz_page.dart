@@ -35,12 +35,14 @@ class _QuizPageState extends State<QuizPage> {
         preferredSize: Size.fromHeight(56),
         child: Builder(
           builder: (builderContext) => AppBar(
-            title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
-            centerTitle: true,
-            actions: <Widget>[
-              IconButton(icon: Icon(Icons.warning), onPressed: () => _onNotifyBadQuestion(builderContext))
-            ],
-          ),
+                title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
+                centerTitle: true,
+                actions: <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.warning),
+                      onPressed: () => _onNotifyBadQuestion(builderContext))
+                ],
+              ),
         ),
       ),
       body: StreamBuilder<List<QuestaoModel>>(
@@ -48,17 +50,22 @@ class _QuizPageState extends State<QuizPage> {
         initialData: _initialQuestions,
         builder: (context, snapshot) {
           return PageView.builder(
-            controller: _bloc.pageController,
-            itemCount: _bloc.calculatePageCount(),
-            onPageChanged: _bloc.onPageChanged,
-            itemBuilder: (context, index) => _buildPageItem(context, index, snapshot.data[index]),
-          );
+              controller: _bloc.pageController,
+              itemCount: snapshot.data.length + 1,
+              onPageChanged: _bloc.onPageChanged,
+              itemBuilder: (context, index) {
+                if (_isHardcoreMode && _bloc.isLastPage(index)) {
+                  return _buildResultItem(context);
+                }
+
+                return _buildQuestaoItem(context, snapshot.data[index]);
+              });
         },
       ),
     );
   }
 
-  Widget _buildPageItem(BuildContext context, int index, QuestaoModel questao) {
+  Widget _buildQuestaoItem(BuildContext context, QuestaoModel questao) {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.only(top: 10, left: 8, right: 8),
@@ -70,6 +77,77 @@ class _QuizPageState extends State<QuizPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildResultItem(context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.only(top: 40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildPartyEmoji(),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "Parabéns!",
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "MavenPro",
+                  color: Theme.of(context).primaryColor),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Você concluiu o simulado ENEM 2019!",
+              style: TextStyle(fontSize: 20, fontFamily: "MavenPro"),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+              "5 de 10 questões de português corretas",
+              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "5 de 10 questões de matemática corretas",
+              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "5 de 10 questões de física corretas",
+              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "5 de 10 questões de química corretas",
+              style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
+            ),
+            SizedBox(
+              height: 10,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPartyEmoji() {
+    return Image.asset(
+      "assets/images/party_emoji.png",
+      height: 128,
+      width: 128,
     );
   }
 
@@ -97,26 +175,33 @@ class _QuizPageState extends State<QuizPage> {
               stream: _bloc.respostas,
               initialData: [],
               builder: (context, snapshot) {
-                final resposta = snapshot.data?.firstWhere((resp) => resp.questaoId == questao.id, orElse: () => null);
+                final resposta = snapshot.data?.firstWhere(
+                    (resp) => resp.questaoId == questao.id,
+                    orElse: () => null);
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
                       child: Radio<int>(
                         value: questao.alternativas[index].id,
-                        groupValue: resposta == null ? -1 : resposta.alternativaId,
-                        onChanged: (alternativaId) => _bloc.onAlternativaSelected(questao.id, alternativaId),
+                        groupValue:
+                            resposta == null ? -1 : resposta.alternativaId,
+                        onChanged: (alternativaId) => _bloc
+                            .onAlternativaSelected(questao.id, alternativaId),
                       ),
                     ),
                     Expanded(
                       flex: 3,
-                      child: Text(
-                        alternativa.corpo,
-                        style: TextStyle(fontFamily: "MavenPro", fontSize: 13)
-                      ),
+                      child: Text(alternativa.corpo,
+                          style:
+                              TextStyle(fontFamily: "MavenPro", fontSize: 13)),
                     ),
                     Expanded(
-                      child: (resposta == null ) ? Container() : ((_isHardcoreMode) ? Container() :_buildAlternativaIcon(alternativa)) ,
+                      child: (resposta == null)
+                          ? Container()
+                          : ((_isHardcoreMode)
+                              ? Container()
+                              : _buildAlternativaIcon(alternativa)),
                     )
                   ],
                 );
@@ -137,57 +222,53 @@ class _QuizPageState extends State<QuizPage> {
 
   void _onNotifyBadQuestion(BuildContext scaffoldContext) {
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: dialogTitle(title: "Informar erro na questão:"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextField(
-              controller: _bloc.errorTextController,
-              maxLines: 5,
-              decoration: InputDecoration(
-                hintText: "O que há de errado?",
-                hintStyle: TextStyle(
-                  fontFamily: "MavenPro"
-                )
+        context: context,
+        builder: (context) => AlertDialog(
+              title: dialogTitle(title: "Informar erro na questão:"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: _bloc.errorTextController,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                        hintText: "O que há de errado?",
+                        hintStyle: TextStyle(fontFamily: "MavenPro")),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          _bloc.onErrorSubmit(scaffoldContext);
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Enviar",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                              fontFamily: "MavenPro"),
+                        ),
+                      ),
+                      FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          "Cancelar",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 18,
+                              fontFamily: "MavenPro"),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-            ),
-            SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    _bloc.onErrorSubmit(scaffoldContext);
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    "Enviar",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      fontFamily: "MavenPro"
-                    ),
-                  ),
-                ),
-                FlatButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    "Cancelar",
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
-                      fontFamily: "MavenPro"
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      )
-    );
+            ));
   }
 
   @override

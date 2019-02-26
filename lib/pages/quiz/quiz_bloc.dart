@@ -5,13 +5,13 @@ import 'package:rxdart/rxdart.dart';
 
 class QuizBloc {
   QuestaoService _questaoService;
-  
+
   PageController pageController;
   static const adInterval = 5;
   List<RespostaModel> respostasList;
   List<QuestaoModel> questoesList;
   TextEditingController errorTextController;
-  int _idQuestaoAtual;
+  int _indiceQuestaoAtual;
 
   final _questoes = BehaviorSubject<List<QuestaoModel>>();
   final _respostas = BehaviorSubject<List<RespostaModel>>();
@@ -29,29 +29,28 @@ class QuizBloc {
     questoesList = initialQuestions;
     _questoes.add(questoesList);
     _respostas.add(respostasList);
-    _idQuestaoAtual = questoesList.first.id;
-  }
-
-  int calculatePageCount() {
-    final totalQuestions = _questoes.value.length;
-    final numberOfAds = (totalQuestions / adInterval).floor() - 1;
-    return totalQuestions;
+    _indiceQuestaoAtual = 0;
   }
 
   void onPageChanged(int index) {
-    _idQuestaoAtual = index;
+    _indiceQuestaoAtual = index;
   }
 
   void onAlternativaSelected(int questaoId, int alternativaId) {
-    var resposta = respostasList.firstWhere((resp) => resp.questaoId == questaoId, orElse: () => null);
-    if(resposta == null) {
-      print("Questão não respondida previamente, adicionando resposta do usuário");
-      respostasList.add(RespostaModel(questaoId: questaoId, alternativaId: alternativaId));
+    var resposta = respostasList
+        .firstWhere((resp) => resp.questaoId == questaoId, orElse: () => null);
+    if (resposta == null) {
+      print(
+          "Questão não respondida previamente, adicionando resposta do usuário");
+      respostasList.add(
+          RespostaModel(questaoId: questaoId, alternativaId: alternativaId));
       _respostas.add(respostasList);
     } else {
-      print("Questão já respondida previamente, atualizando resposta do usuário");
+      print(
+          "Questão já respondida previamente, atualizando resposta do usuário");
       resposta.alternativaId = alternativaId;
-      respostasList[respostasList.indexWhere((resposta) => resposta.questaoId == questaoId)] = resposta;
+      respostasList[respostasList.indexWhere(
+          (resposta) => resposta.questaoId == questaoId)] = resposta;
     }
 
     print(respostasList);
@@ -60,9 +59,12 @@ class QuizBloc {
   }
 
   void onErrorSubmit(BuildContext context) {
-    final snackbar = SnackBar(content: Text("Erro na questão com id $_idQuestaoAtual informado com sucesso"));
+    final snackbar =
+        SnackBar(content: Text("Erro na questão informado com sucesso"));
     Scaffold.of(context).showSnackBar(snackbar);
   }
+
+  bool isLastPage(int index) => index == _questoes.value.length;
 
   void dispose() {
     _questoes.close();
