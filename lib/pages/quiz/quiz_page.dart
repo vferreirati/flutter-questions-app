@@ -93,6 +93,9 @@ class _QuizPageState extends State<QuizPage> {
       final alternativa = questao.alternativas[index];
       return GestureDetector(
         onTap: () {
+          if(_isHardcoreMode && _bloc.questaoFoiRespondida(questao.id)) {
+            return;
+          }
           _bloc.onAlternativaSelected(questao.id, alternativa.id);
           if(_isHardcoreMode) {
             _bloc.verificarQuestoesRespondidas();
@@ -117,6 +120,9 @@ class _QuizPageState extends State<QuizPage> {
                         groupValue:
                             resposta == null ? -1 : resposta.alternativaId,
                         onChanged: (alternativaId) {
+                          if(_isHardcoreMode && _bloc.questaoFoiRespondida(questao.id)) {
+                            return;
+                          }
                           _bloc.onAlternativaSelected(questao.id, alternativaId);
                           if(_isHardcoreMode) {
                             _bloc.verificarQuestoesRespondidas();

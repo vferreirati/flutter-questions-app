@@ -74,6 +74,8 @@ class QuizBloc {
     }
   }
 
+  bool questaoFoiRespondida(int questaoId) => _respostas.value.firstWhere((resp) => resp.questaoId == questaoId, orElse: () => null) != null;
+
   void onErrorSubmit(BuildContext context) {
     final snackbar =
         SnackBar(content: Text("Erro na questão informado com sucesso"));
