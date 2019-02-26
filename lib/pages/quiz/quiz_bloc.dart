@@ -1,4 +1,5 @@
 import 'package:exata_questoes_app/models/api/questao_model.dart';
+import 'package:exata_questoes_app/pages/result/resultado_page.dart';
 import 'package:exata_questoes_app/services/questao/questao_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,6 +12,7 @@ class QuizBloc {
   List<RespostaModel> respostasList;
   List<QuestaoModel> questoesList;
   TextEditingController errorTextController;
+  BuildContext _pageContext;
   int _indiceQuestaoAtual;
 
   final _questoes = BehaviorSubject<List<QuestaoModel>>();
@@ -25,7 +27,8 @@ class QuizBloc {
     errorTextController = TextEditingController();
   }
 
-  void setup(List<QuestaoModel> initialQuestions) {
+  void setup(List<QuestaoModel> initialQuestions, BuildContext context) {
+    _pageContext = context;
     questoesList = initialQuestions;
     _questoes.add(questoesList);
     _respostas.add(respostasList);
@@ -52,10 +55,24 @@ class QuizBloc {
       respostasList[respostasList.indexWhere(
           (resposta) => resposta.questaoId == questaoId)] = resposta;
     }
-
-    print(respostasList);
-
     _respostas.add(respostasList);
+    _verificarQuestoesRespondidas();
+  }
+
+  void _verificarQuestoesRespondidas() {
+    final listaRespostas = _respostas.value;
+    final listaQuestoes = _questoes.value;
+
+    if(listaQuestoes.length == listaRespostas.length) {
+      print("Todas as questões foram respondidas, abrir pagina de resultado");
+      final route = MaterialPageRoute(
+        builder: (context) => ResultPage()
+      );
+      Navigator.of(_pageContext).push(route);
+
+    } else {
+      print("Ainda faltam ${listaQuestoes.length - listaRespostas.length} questões a serem respondidas");
+    }
   }
 
   void onErrorSubmit(BuildContext context) {

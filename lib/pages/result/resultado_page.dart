@@ -2,7 +2,7 @@ import 'package:exata_questoes_app/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 
-class ResultadoPage extends StatelessWidget {
+class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

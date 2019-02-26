@@ -29,7 +29,7 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    _bloc.setup(_initialQuestions);
+    _bloc.setup(_initialQuestions, context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(56),
@@ -51,7 +51,7 @@ class _QuizPageState extends State<QuizPage> {
         builder: (context, snapshot) {
           return PageView.builder(
               controller: _bloc.pageController,
-              itemCount: snapshot.data.length + 1,
+              itemCount: snapshot.data.length,
               onPageChanged: _bloc.onPageChanged,
               itemBuilder: (context, index) {
                 return _buildQuestaoItem(context, snapshot.data[index]);
