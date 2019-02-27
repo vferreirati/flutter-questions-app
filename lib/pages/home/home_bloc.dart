@@ -110,7 +110,7 @@ class HomeBloc {
             builder: (context) => QuizPage(
                 bloc: kiwi.Container().resolve(),
                 filtro: _filtro,
-                initialQuestions: questoes,
+                simulado: SimuladoModel(id: -1, nome: "Treinamento", questoes: questoes),
                 isHardcoreMode: false)));
       }
     } else {
@@ -129,7 +129,7 @@ class HomeBloc {
       simulado = response.data;
       final route = MaterialPageRoute(
         builder: (context) => QuizPage(
-          initialQuestions: simulado.questoes,
+          simulado: simulado,
           filtro: null,
           bloc: kiwi.Container().resolve(),
           isHardcoreMode: true,

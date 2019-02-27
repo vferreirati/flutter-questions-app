@@ -1,8 +1,18 @@
+import 'package:exata_questoes_app/models/api/simulado_model.dart';
 import 'package:exata_questoes_app/pages/home/home_page.dart';
+import 'package:exata_questoes_app/pages/quiz/quiz_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 
 class ResultPage extends StatelessWidget {
+  final SimuladoModel simulado;
+  final List<RespostaModel> respostas;
+
+  ResultPage({
+    @required this.simulado,
+    @required this.respostas
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +45,7 @@ class ResultPage extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  "Você concluiu o simulado ENEM 2019!",
+                  "Você concluiu o simulado ${simulado.nome}!",
                   style: TextStyle(fontSize: 20, fontFamily: "MavenPro", ),
                   textAlign: TextAlign.center,
                 ),

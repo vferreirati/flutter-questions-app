@@ -1,20 +1,21 @@
 import 'package:exata_questoes_app/models/api/alternativa_model.dart';
 import 'package:exata_questoes_app/models/api/questao_model.dart';
+import 'package:exata_questoes_app/models/api/simulado_model.dart';
 import 'package:exata_questoes_app/models/filtro_model.dart';
 import 'package:exata_questoes_app/pages/quiz/quiz_bloc.dart';
 import 'package:exata_questoes_app/widgets/text.dart';
 import 'package:flutter/material.dart';
 
 class QuizPage extends StatefulWidget {
-  final List<QuestaoModel> initialQuestions;
+  final SimuladoModel simulado;
   final bool isHardcoreMode;
   final QuizBloc bloc;
   final FiltroModel filtro;
 
   QuizPage({
-    @required this.initialQuestions,
     @required this.bloc,
     @required this.filtro,
+    @required this.simulado,
     this.isHardcoreMode = false,
   });
 
@@ -24,38 +25,42 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   bool get _isHardcoreMode => widget.isHardcoreMode;
-  List<QuestaoModel> get _initialQuestions => widget.initialQuestions;
   QuizBloc get _bloc => widget.bloc;
+  SimuladoModel get _simulado => widget.simulado;
 
   @override
   Widget build(BuildContext context) {
-    _bloc.setup(_initialQuestions, context);
+    _bloc.setup(simulado: _simulado, context: context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(56),
         child: Builder(
           builder: (builderContext) => AppBar(
-                title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
-                centerTitle: true,
-                actions: <Widget>[
-                  IconButton(
-                      icon: Icon(Icons.warning),
-                      onPressed: () => _onNotifyBadQuestion(builderContext))
-                ],
-              ),
+            title: appBarTitle(_isHardcoreMode ? "Simulado" : "Questões"),
+            centerTitle: true,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.warning),
+                  onPressed: () => _onNotifyBadQuestion(builderContext))
+            ],
+          ),
         ),
       ),
       body: StreamBuilder<List<QuestaoModel>>(
         stream: _bloc.questoes,
-        initialData: _initialQuestions,
+        initialData: null,
         builder: (context, snapshot) {
-          return PageView.builder(
+          if(snapshot.data != null) {
+            return PageView.builder(
               controller: _bloc.pageController,
               itemCount: snapshot.data.length,
               onPageChanged: _bloc.onPageChanged,
               itemBuilder: (context, index) {
                 return _buildQuestaoItem(context, snapshot.data[index]);
-              });
+              }
+            );
+          }
+          return Center(child: CircularProgressIndicator(),);
         },
       ),
     );
@@ -215,6 +220,5 @@ class _QuizPageState extends State<QuizPage> {
   void dispose() {
     super.dispose();
     _bloc.dispose();
-    print("On dispose");
   }
 }

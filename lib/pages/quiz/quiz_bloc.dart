@@ -1,5 +1,6 @@
 import 'package:exata_questoes_app/models/api/questao_model.dart';
-import 'package:exata_questoes_app/pages/result/resultado_page.dart';
+import 'package:exata_questoes_app/models/api/simulado_model.dart';
+import 'package:exata_questoes_app/pages/result/result_page.dart';
 import 'package:exata_questoes_app/services/questao/questao_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
@@ -8,11 +9,16 @@ class QuizBloc {
   QuestaoService _questaoService;
 
   PageController pageController;
-  static const adInterval = 5;
-  List<RespostaModel> respostasList;
-  List<QuestaoModel> questoesList;
   TextEditingController errorTextController;
+
+  static const adInterval = 5;
+
+  List<RespostaModel> _respostasList;
+
+  SimuladoModel _simulado;
+
   BuildContext _pageContext;
+
   int _indiceQuestaoAtual;
 
   final _questoes = BehaviorSubject<List<QuestaoModel>>();
@@ -23,15 +29,15 @@ class QuizBloc {
 
   QuizBloc(this._questaoService) {
     pageController = PageController();
-    respostasList = List<RespostaModel>();
+    _respostasList = List<RespostaModel>();
     errorTextController = TextEditingController();
   }
 
-  void setup(List<QuestaoModel> initialQuestions, BuildContext context) {
+  void setup({BuildContext context, SimuladoModel simulado}) {
     _pageContext = context;
-    questoesList = initialQuestions;
-    _questoes.add(questoesList);
-    _respostas.add(respostasList);
+    _simulado = simulado;
+    _questoes.add(simulado.questoes);
+    _respostas.add(_respostasList);
     _indiceQuestaoAtual = 0;
   }
 
@@ -40,22 +46,22 @@ class QuizBloc {
   }
 
   void onAlternativaSelected(int questaoId, int alternativaId) {
-    var resposta = respostasList
+    var resposta = _respostasList
         .firstWhere((resp) => resp.questaoId == questaoId, orElse: () => null);
     if (resposta == null) {
       print(
           "Questão não respondida previamente, adicionando resposta do usuário");
-      respostasList.add(
+      _respostasList.add(
           RespostaModel(questaoId: questaoId, alternativaId: alternativaId));
-      _respostas.add(respostasList);
+      _respostas.add(_respostasList);
     } else {
       print(
           "Questão já respondida previamente, atualizando resposta do usuário");
       resposta.alternativaId = alternativaId;
-      respostasList[respostasList.indexWhere(
+      _respostasList[_respostasList.indexWhere(
           (resposta) => resposta.questaoId == questaoId)] = resposta;
     }
-    _respostas.add(respostasList);
+    _respostas.add(_respostasList);
   }
 
   void verificarQuestoesRespondidas() {
@@ -65,7 +71,10 @@ class QuizBloc {
     if(listaQuestoes.length == listaRespostas.length) {
       print("Todas as questões foram respondidas, abrir pagina de resultado");
       final route = MaterialPageRoute(
-        builder: (context) => ResultPage()
+        builder: (context) => ResultPage(
+          simulado: _simulado,
+          respostas: _respostasList,
+        )
       );
       Navigator.of(_pageContext).push(route);
 
