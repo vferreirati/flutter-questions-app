@@ -93,6 +93,9 @@ class HomeBloc {
   }
 
   void onLoadQuestoes(BuildContext context) async {
+    if(_loadingQuestoes.value != null && _loadingQuestoes.value)
+      return;
+
     _loadingQuestoes.add(true);
 
     final response = await _questaoService.getQuestoesAsync(_filtro);
@@ -101,14 +104,18 @@ class HomeBloc {
         final snackbar = SnackBar(
             content: Text("Nenhuma questão encontrada com o filtro aplicado"));
         Scaffold.of(context).showSnackBar(snackbar);
+      
       } else {
         final questoes = response.data;
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).push(
+          MaterialPageRoute(
             builder: (context) => QuizPage(
-                bloc: kiwi.Container().resolve(),
-                filtro: _filtro,
-                simulado: SimuladoModel(id: -1, nome: "Treinamento", questoes: questoes),
-                isHardcoreMode: false)));
+              bloc: kiwi.Container().resolve(),
+              filtro: _filtro,
+              simulado: SimuladoModel(id: -1, nome: "Treinamento", questoes: questoes),
+              isHardcoreMode: false)
+          )
+        );
       }
     } else {
       final snackbar = SnackBar(content: Text(response.errors.first));
@@ -119,6 +126,9 @@ class HomeBloc {
   }
 
   void onSelectSimulado(BuildContext context, SimuladoModel simulado) async {
+    if(_loadingQuestoes.value != null && _loadingQuestoes.value)
+      return;
+
     _loadingQuestoes.add(true);
 
     final response = await _simuladoService.getSimuladoAsync(simulado.id);
