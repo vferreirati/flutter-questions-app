@@ -1,5 +1,6 @@
 import 'package:exata_questoes_app/models/api/alternativa_model.dart';
 import 'package:exata_questoes_app/models/api/banca_model.dart';
+import 'package:exata_questoes_app/models/api/materia_model.dart';
 
 class QuestaoModel {
   int id;
@@ -7,9 +8,10 @@ class QuestaoModel {
   String explicacao;
   String ano;
   BancaModel banca;
+  MateriaModel materia;
   List<AlternativaModel> alternativas;
 
-  QuestaoModel({this.id, this.enunciado});
+  QuestaoModel({this.id, this.enunciado, this.alternativas, this.ano, this.banca, this.explicacao, this.materia});
 
   static QuestaoModel fromJson(Map<String, dynamic> json) {
     var model = QuestaoModel()
@@ -18,6 +20,7 @@ class QuestaoModel {
       ..ano = json["ano"]
       ..explicacao = json["explicacao"]
       ..banca = BancaModel.fromJson(json["banca"])
+      ..materia = MateriaModel.fromJson(json["materia"])
       ..alternativas = (json["alternativas"] as List).map((alternativa) => AlternativaModel.fromJson(alternativa)).toList();
 
     return model;
@@ -31,6 +34,7 @@ class QuestaoModel {
     map["ano"] = this.ano;
     map["explicacao"] = this.explicacao;
     map["banca"] = this.banca.toJson();
+    map["materia"] = this.materia.toJson();
     map["alternativas"] = this.alternativas.map((alternativa) => alternativa.toJson()).toList();
 
     return map;

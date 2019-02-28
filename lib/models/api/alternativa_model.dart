@@ -1,14 +1,16 @@
 class AlternativaModel {
+  int id;
   String corpo;
   bool correta;
 
-  AlternativaModel({this.corpo, this.correta});
+  AlternativaModel({this.corpo, this.correta, this.id});
 
   static AlternativaModel fromJson(Map<String, dynamic> json) {
     var model = AlternativaModel();
 
     model.corpo = json["corpo"];
     model.correta = json["correta"];
+    model.id = json["id"];
 
     return model;
   }
@@ -18,6 +20,7 @@ class AlternativaModel {
 
     map["corpo"] = this.corpo;
     map["correta"] = this.correta;
+    map["id"] = this.id;
 
     return map;
   }

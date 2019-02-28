@@ -10,7 +10,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0"
 
 dependencies:
   flutter:
@@ -23,10 +23,15 @@ dependencies:
   sqflite: ^1.1.0
   connectivity: ^0.4.0+2
   dio: ^2.0.0
+  rxdart: ^0.20.0
+  kiwi: ^0.1.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  kiwi_generator: ^0.3.1
+  build_runner: '>=0.10.3 <1.2.0'
 
 
 # For information on the generic Dart part of this file, see the
@@ -67,6 +72,17 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.io/custom-fonts/#from-packages
+  assets:
+    - assets/images/avatar-placeholder.png
+    - assets/images/2x/avatar-placeholder.png
+    - assets/images/3x/avatar-placeholder.png
+    - assets/images/party_emoji.png
+    - assets/images/2x/party_emoji.png
+    - assets/images/3x/party_emoji.png
+
+  fonts:
+    - family: MavenPro
+      fonts:
+        - asset: assets/fonts/MavenPro-Regular.ttf
+        - asset: assets/fonts/MavenPro-Bold.ttf
+          weight: 700
