@@ -1,6 +1,7 @@
 import 'package:exata_questoes_app/pages/home/tabs/notifications_tab.dart';
 import 'package:exata_questoes_app/pages/home/home_bloc.dart';
 import 'package:exata_questoes_app/pages/home/tabs/questions_tab.dart';
+import 'package:exata_questoes_app/pages/home/tabs/simulations_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,9 +15,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int tab = 0;
   static const int _QUESTIONS = 0;
-  static const int _NOTIFICATIONS = 1;
+  static const int _SIMULATIONS = 1;
+  static const int _NOTIFICATIONS = 2;
 
-  HomeBloc get _questionBloc => widget.homeBloc;
+  HomeBloc get _homeBloc => widget.homeBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,8 @@ class _HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: tab,
         children: <Widget>[
-          QuestionsTab(bloc: _questionBloc),
+          QuestionsTab(bloc: _homeBloc),
+          SimulationsTab(bloc: _homeBloc),
           NotificationsTab()
         ],
       ),
@@ -39,8 +42,12 @@ class _HomePageState extends State<HomePage> {
       onTap: _onBottomNavigationSelect,
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.assignment),
+          icon: Icon(Icons.laptop_chromebook),
           title: Text("Questões"),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.assignment),
+          title: Text("Simulados"),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),
@@ -59,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _questionBloc.dispose();
+    _homeBloc.dispose();
     super.dispose();
   }
 }
