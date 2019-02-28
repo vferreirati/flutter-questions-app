@@ -28,18 +28,14 @@ class HomeBloc {
   final _loadingQuestoes = BehaviorSubject<bool>();
 
   Stream<List<String>> get anos => _anos.stream;
-
   Stream<List<SimuladoModel>> get simulados => _simulados.stream;
-
   Stream<List<MateriaModel>> get materias => _materias.stream;
-
   Stream<bool> get loadingSimulados => _loadingSimulados.stream;
-
   Stream<bool> get loadingAnos => _loadingAnos.stream;
-
   Stream<bool> get loadingMaterias => _loadingMaterias.stream;
-
   Stream<bool> get loadingQuestoes => _loadingQuestoes.stream;
+
+  List<SimuladoModel> _simuladosList;
 
   HomeBloc(this._simuladoService, this._anoService, this._materiaService,
       this._questaoService) {
@@ -61,6 +57,7 @@ class HomeBloc {
 
     var result = await _simuladoService.getSimuladosAsync();
     if (result.success) {
+      _simuladosList = result.data;
       _simulados.add(result.data);
     } else {
       _simulados.addError(result.errors);
@@ -144,6 +141,13 @@ class HomeBloc {
 
     _loadingQuestoes.add(false);
   }
+
+  void onSearchSimulado(String query) {
+    final simulados = _simuladosList.where((s) => s.nome.contains(query)).toList();
+    _simulados.add(simulados);
+  }
+
+  void onClearSimuladoSearch() => _simulados.add(_simuladosList);
 
   void onAddMateria(bool wasAdded, MateriaModel materia) {
     wasAdded

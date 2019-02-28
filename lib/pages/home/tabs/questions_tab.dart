@@ -51,8 +51,6 @@ class QuestionsTab extends StatelessWidget {
           padding: EdgeInsets.only(top: 5, left: 10, right: 10),
           child: Column(
             children: <Widget>[
-              _simuladoFilter(context),
-              Divider(),
               _materiaFilter(),
               Divider(),
               _anoFilter()
@@ -122,51 +120,21 @@ class QuestionsTab extends StatelessWidget {
         });
   }
 
-  Widget _simuladoFilter(BuildContext context) {
-    return StreamBuilder<bool>(
-      initialData: true,
-      stream: bloc.loadingSimulados,
-      builder: (context, snapshot) {
-        if (!snapshot.data) {
-          return StreamBuilder<List<SimuladoModel>>(
-            stream: bloc.simulados,
-            initialData: [],
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return SingleSelectDropDown.error(
-                  title: "Simulados",
-                  error: "Erro ao carregar simulados",
-                );
-              }
-              return SingleSelectDropDown<SimuladoModel>(
-                title: "Simulados",
-                items: snapshot.data,
-                onBuildName: (simulado) => simulado.nome,
-                onSelect: (simulado) => bloc.onSelectSimulado(context, simulado),
-              );
-            },
-          );
-        } else {
-          return SingleSelectDropDown.loading(title: "Simulados");
-        }
-      },
-    );
-  }
-
   Widget _submitButton(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: StreamBuilder<bool>(
-          stream: bloc.loadingQuestoes,
-          initialData: false,
-          builder: (context, snapshot) {
-            return GradientButton(
-              onClick: () => bloc.onLoadQuestoes(context),
-              title: "Iniciar",
-              isLoading: snapshot.data
-            );
-          },
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      child: StreamBuilder<bool>(
+        stream: bloc.loadingQuestoes,
+        initialData: false,
+        builder: (context, snapshot) {
+          return GradientButton(
+            onClick: () => bloc.onLoadQuestoes(context),
+            title: "Iniciar",
+            isLoading: snapshot.data
+          );
+        },
+      )
+    );
   }
 
   void _showUserProfile() {
