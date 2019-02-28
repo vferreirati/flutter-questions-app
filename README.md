@@ -1,12 +1,21 @@
-# Flutter Questions App
 
-This is a simple project of mine which implements a simple yet robust question answering app. 
-The idea behind this app is to have a basic project open to the public with basic functionalities. This same code base will be improved upon and used later on a more advanced (and private) application that will be published on Android and IOS stores.
+# Quizr
+Quizr is my open source prototype of my soon to be released Quiz App.
+It has the main feature of allowing the user to study by answering questions from Brazil's most important exams like ENEM, USP, UFRJ and more.
+Being a prototype, Quizr only works with mock data. 
 
-## Planned functionalities and implementation details:
-- View and Business logic separation using BLoC pattern. This will include the usage of repositories and local cache using databases.
-- Question answering functionality using mock data (Real world data will be used later, in the private app ofc...)
-- Data filtering (Still not sure if this will be part of this project).
-- A few more stuff that i can't think of right now.
+## Core Features
+- Training mode: Take your time to answer the questions, see the correct answer after you take a guess.
+- Simulation mode: You have to complete the exam before certain time or you will get a bad score!
+- Question filtering: Don't want to study math? Only want the most recent questions? Choose the options that fits you!
 
-I know that a project like this can be a bit weird, since most of the functionality will no be present on this version, but i've been noticing that most of my projects are private. This is not a good idea since i need some "proof of knowledge" to be public on my github profile. Also, this way i can give back something to the community, maybe someone can learn a thing or two about the way flutter works, who knows?
+## Implementation Details
+A few libraries were used on this prototype and a few weren't.
+Here's why some of these libraries were used:
+
+- Dio: It's used instead of Http because i want to be able to check my authentication status before making requests to my backend. This way i can refresh tokens and deal with problems more easily.
+- Connectivity: Used to check connectivity status before making requests.
+- RxDart: Rx is love, Rx is life. Also is the BLoC pattern.
+- Kiwi: Dependency Injection is also love and life.
+
+
