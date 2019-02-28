@@ -52,38 +52,7 @@ class ResultPage extends StatelessWidget {
                 SizedBox(
                   height: 25,
                 ),
-                Text(
-                  "5 de 10 questões de português corretas",
-                  style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "5 de 10 questões de matemática corretas",
-                  style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "5 de 10 questões de física corretas",
-                  style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "5 de 10 questões de química corretas",
-                  style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 10,
-                )
+                _buildSumarioMaterias()
               ],
             ),
           ),
@@ -97,6 +66,53 @@ class ResultPage extends StatelessWidget {
       "assets/images/party_emoji.png",
       height: 128,
       width: 128,
+    );
+  }
+
+  Widget _buildSumarioMaterias() {
+    final materias = List<String>();
+    simulado.questoes.forEach((q) {
+      if(!materias.contains(q.materia.nome)) {
+        materias.add(q.materia.nome);
+      }
+    });
+
+    final respostasCorretas = Map<String, int>.fromIterable(
+      materias,
+      key: (materia) => materia,
+      value: (_) => 0
+    );
+    final totalQuestoes = Map<String, int>.fromIterable(
+        materias,
+        key: (materia) => materia,
+        value: (_) => 0
+    );
+    simulado.questoes.forEach((q) {
+      totalQuestoes[q.materia.nome] += 1;
+      final alternativaCorreta = q.alternativas.firstWhere((alt) => alt.correta);
+      final resposta = respostas.firstWhere((r) => r.questaoId == q.id);
+
+      if(resposta.alternativaId == alternativaCorreta.id) {
+        respostasCorretas[q.materia.nome] += 1;
+      }
+      respostas.remove(resposta);
+    });
+
+    final children = List<Widget>();
+    materias.forEach((materia) {
+      children.add(Text(
+        "${respostasCorretas[materia]} de ${totalQuestoes[materia]} questões de $materia corretas",
+        style: TextStyle(fontSize: 18, fontFamily: "MavenPro"),
+        textAlign: TextAlign.center,
+      ));
+      children.add(SizedBox(
+        height: 10,
+      ));
+    });
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: children,
     );
   }
 
